@@ -1,6 +1,6 @@
 # Tugas 1 IF3260 Grafika Komputer
 
-2D Web Based CAD (Computer Aided Drawing)
+2D Web Based CAD (Computer-Aided Design)
 
 Dibuat Oleh:
 
