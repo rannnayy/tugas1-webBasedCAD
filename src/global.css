@@ -1,0 +1,32 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100vw;
+    height: 100vh;
+}
+
+.dep {
+    flex-grow: 1;
+    background-color: grey;
+    height: 100vh;
+}
+
+.panel {
+    flex-grow: 2;
+    background-color: white;
+    height: 100vh;
+}
+
+.opt {
+    flex-grow: 1;
+    background-color: grey;
+    height: 100vh;
+}
