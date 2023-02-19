@@ -33,7 +33,20 @@ html {
 }
 
 canvas {
-    width: 100vh;
-    height: 100vh;
-    display: block;
+  width: 100vh;
+  height: 100vh;
+  display: block;
+}
+
+.model-button {
+  display: block;
+}
+
+.point-button {
+  display: block;
+  margin-left: 20px;
+}
+
+textarea {
+  display: block;
 }

@@ -5,33 +5,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="./WebGL_Logo.png" />
         <link rel="stylesheet" href="global.css">
-        <script src="scripts.js"></script>
         <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
         <script id="vertex-shader-2d" type="notjs">
-            
-            // an attribute will receive data from a buffer
-            attribute vec4 a_position;
-            
-            // all shaders have a main function
+            attribute vec2 a_position;
+            attribute vec4 a_color;
+
+            uniform vec2 u_rotation;
+            uniform vec2 u_translation;
+            uniform vec2 u_scale;
+            uniform vec2 u_pivot;
+
+            varying vec4 v_color;
+
             void main() {
-            
-                // gl_Position is a special variable a vertex shader
-                // is responsible for setting
-                gl_Position = a_position;
+                vec2 scaledPosition = a_position * u_scale;
+
+                vec2 rotatedPosition = vec2(
+                    u_pivot.x + (scaledPosition.x - u_pivot.x ) * u_rotation.y + (scaledPosition.y - u_pivot.y) * u_rotation.x,
+                    u_pivot.y + (scaledPosition.y - u_pivot.y) * u_rotation.y - (scaledPosition.x - u_pivot.x) * u_rotation.x);
+
+                vec2 position = rotatedPosition + u_translation;
+                
+                gl_Position = vec4(position, 0 , 1);
+
+                v_color = a_color;
             }
         </script>
             
         <script id="fragment-shader-2d" type="notjs">
-            // fragment shaders don't have a default precision so we need
-            // to pick one. mediump is a good default
             precision mediump float;
 
-            uniform vec4 u_color;
+            varying vec4 v_color;
             
             void main() {
-                // gl_FragColor is a special variable a fragment shader
-                // is responsible for setting
-                gl_FragColor = u_color; // return reddish-purple
+                gl_FragColor = v_color;
             } 
         </script>
         <title>2D Web Based CAD</title>
@@ -40,6 +47,11 @@
         <div class="wrapper">
             <div class="dep">
                 Struktur file
+                <textarea disabled id="modelActive"></textarea>
+                <div id="model-structure">
+                    
+                </div>
+                
             </div>
             <canvas id="gl-canvas">
             </canvas>
@@ -49,8 +61,57 @@
                 <button id="poligon-fan">Poligon FAN</button>
 
                 <div>
-                    Color  
+                    <label>Color</label> 
                     <input id="color" type="color">
+                </div>
+
+                <div>
+                    <div>Translasi</div>
+                    <div>
+                        <label for="slider-x">x</label>
+                        <input type="range" name="slider-x" id="slider-x" min="-2" max="2" step="any">
+                    </div>
+                    <div>
+                        <label for="slider-y">y</label>
+                        <input type="range" name="slider-y" id="slider-y" min="-2" max="2" step="any">
+                    </div>
+                </div>
+
+                <div>
+                    <br>
+                    <div>Rotasi</div>
+                    <div>
+                        <label for="rotasi">Angle</label>
+                        <input type="range" name="rotasi" id="rotasi" min="0" max="360" step="any" >
+                    </div>
+                </div>
+                <div>
+                    <br>
+                    <div>Scale</div>
+                    <label for="scale-x">x</label>
+                    <input type="range" name="scale-x" id="scale-x" min="-3" max="3" step="any" value = "1">
+                </div>
+                <div>
+                    <label for="scale-y">y</label>
+                    <input type="range" name="scale-y" id="scale-y" min="-3" max="3" step="any" value = "1">
+                </div>
+                <div>
+                    <br>
+                    <button id="delete_point">Delete Point</button>
+                    <br>
+                    <label>Point Color</label> 
+                    <input id="point_color" type="color">
+                    <br>
+                    <br>
+                    <label for="">Move Point</label>
+                    <div>
+                        <label for="">x</label>
+                        <input type="range" name="slider-point-x" id="slider-point-x" min="-2" max="2" step="any">
+                    </div>
+                    <div>
+                        <label for="">y</label>
+                        <input type="range" name="slider-point-y" id="slider-point-y" min="-2" max="2" step="any">
+                    </div>
                 </div>
             </div>
         </div>

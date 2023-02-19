@@ -1,3 +1,193 @@
+////// MAIN //////
+
+var canvas = document.getElementById("gl-canvas");
+var gl = canvas.getContext("webgl");
+if (!gl) {
+  alert("WebGL isn't available");
+}
+
+var mode = "";
+var modelSelected = "";
+var pointSelected = "";
+var modelButtonHTML;
+var fileStructure = document.getElementById("model-structure");
+var poligonStripButton = document.getElementById("poligon-strip");
+var poligonFanButton = document.getElementById("poligon-fan");
+var colorPicker = document.getElementById("color");
+var sliderX = document.getElementById("slider-x");
+var sliderY = document.getElementById("slider-y");
+var sliderRotation = document.getElementById("rotasi");
+var modelActiveTextArea = document.getElementById("modelActive");
+var scaleX = document.getElementById("scale-x");
+var scaleY = document.getElementById("scale-y");
+var deletePointButton = document.getElementById("delete_point");
+var pointColorPicker = document.getElementById("point_color");
+var sliderPointX = document.getElementById("slider-point-x");
+var sliderPointY = document.getElementById("slider-point-y");
+
+modelActiveTextArea.innerText = modelSelected;
+
+sliderRotation.addEventListener("input", (e) => {
+  let angleInRadian = (e.target.value * Math.PI) / 180;
+  let rotation = [Math.sin(angleInRadian), Math.cos(angleInRadian)];
+  for (let model of modelArray) {
+    if (model.getName() === modelSelected) {
+      model.setRotation(rotation);
+    }
+  }
+
+  render();
+});
+
+sliderX.addEventListener("input", (e) => {
+  for (let model of modelArray) {
+    if (model.getName() === modelSelected) {
+      model.setTranslationX(e.target.value - model.getCentroid()[0]);
+    }
+  }
+
+  render();
+});
+
+sliderY.addEventListener("input", (e) => {
+  for (let model of modelArray) {
+    if (model.getName() === modelSelected) {
+      model.setTranslationY(e.target.value - model.getCentroid()[1]);
+    }
+  }
+  render();
+});
+
+scaleX.addEventListener("input", (e) => {
+  for (let model of modelArray) {
+    if (model.getName() == modelSelected) {
+      model.setScaleX(e.target.value);
+    }
+  }
+  render();
+});
+
+scaleY.addEventListener("input", (e) => {
+  for (let model of modelArray) {
+    if (model.getName() == modelSelected) {
+      model.setScaleY(e.target.value);
+    }
+  }
+  render();
+});
+
+sliderPointX.addEventListener("input", (e) => {
+  for (let model of modelArray) {
+    if (model.getName() == modelSelected) {
+      for (let i = 0; i < model.getNumVertices(); i++) {
+        if (model.getPointList()[i].getName() == pointSelected) {
+          model.updatePointLocationX(i, e.target.value);
+        }
+      }
+    }
+  }
+  render();
+});
+
+sliderPointY.addEventListener("input", (e) => {
+  for (let model of modelArray) {
+    if (model.getName() == modelSelected) {
+      for (let i = 0; i < model.getNumVertices(); i++) {
+        if (model.getPointList()[i].getName() == pointSelected) {
+          model.updatePointLocationY(i, e.target.value);
+        }
+      }
+    }
+  }
+  render();
+});
+
+poligonStripButton.addEventListener("click", (e) => {
+  polygonStripClick(e);
+});
+
+poligonFanButton.addEventListener("click", (e) => {
+  polygonFanClick(e);
+});
+
+deletePointButton.addEventListener("click", (e) => {
+  deletePointClick(e);
+});
+
+colorPicker.addEventListener("change", (e) => {
+  let color = e.target.value;
+  let r = parseInt(color.substr(1, 2), 16) / 255;
+  let g = parseInt(color.substr(3, 2), 16) / 255;
+  let b = parseInt(color.substr(5, 2), 16) / 255;
+  tempColor = [r, g, b, 1];
+  for (let model of modelArray) {
+    if (model.getName() == modelSelected) {
+      model.setVerticesColor([r, g, b, 1]);
+      render();
+    }
+  }
+});
+
+pointColorPicker.addEventListener("change", (e) => {
+  let color = e.target.value;
+  let r = parseInt(color.substr(1, 2), 16) / 255;
+  let g = parseInt(color.substr(3, 2), 16) / 255;
+  let b = parseInt(color.substr(5, 2), 16) / 255;
+  let temp = [r, g, b, 1];
+  for (let model of modelArray) {
+    if (model.getName() == modelSelected) {
+      for (let i = 0; i < model.getNumVertices(); i++) {
+        if (model.getPointList()[i].getName() == pointSelected) {
+          model.getPointList()[i].setColor(temp);
+          model.updateVerticesColor(i, temp);
+        }
+      }
+      render();
+    }
+  }
+});
+
+canvas.addEventListener("click", (e) => {
+  mouseClick(e);
+});
+
+var vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
+var fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
+
+var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+var program = createProgram(gl, vertexShader, fragmentShader);
+
+var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+var colorAttributeLocation = gl.getAttribLocation(program, "a_color");
+var rotationLocation = gl.getUniformLocation(program, "u_rotation");
+var translationLocation = gl.getUniformLocation(program, "u_translation");
+var pivotLocation = gl.getUniformLocation(program, "u_pivot");
+var scaleLocation = gl.getUniformLocation(program, "u_scale");
+
+var positionBuffer = gl.createBuffer();
+var colorBuffer = gl.createBuffer();
+
+var numModel = 0; //Banyaknya model/bangun
+var modelArray = []; //Menyimpan semua model
+var tempVertices = []; //menyimpan vertex sementara
+var tempColor = [0, 0, 0, 1]; //nilai color sementara
+
+webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+gl.clearColor(0.8, 0.8, 0.8, 1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+gl.useProgram(program);
+
+gl.enableVertexAttribArray(positionAttributeLocation);
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+gl.enableVertexAttribArray(colorAttributeLocation);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+gl.vertexAttribPointer(colorAttributeLocation, 4, gl.FLOAT, false, 0, 0);
+
 //////  FUNCTION //////
 
 function createShader(gl, type, source) {
@@ -28,21 +218,9 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 function polygonStripClick(e) {
-  /*
-  Menekan tombol Poligon untuk memulai mode poligon-???
-  Tombol poligon akan berganti menjadi save
-  Memasukkan titik dengan mengeklik canvas dan akan disimpan di array tempVertices sebelum dimasukkan ke all vertices
-  Setelah selesai memasukkan titik klik tombol save maka akan terbentuk poligon
-  */
   if (mode == "poligon-strip") {
     poligonStripButton.innerText = "Poligon STRIP";
-    for (let i = 0; i < tempVertices.length; i++) {
-      allVertices.push(tempVertices[i]);
-    }
-    offsetModel[numModel] = numVertices.reduce((total, a) => total + a, 0);
-    numVertices[numModel] = tempVertices.length / 2;
-    typeModel[numModel] = gl.TRIANGLE_STRIP;
-    allColor[numModel] = tempColor;
+    modelArray.push(new Polygon(tempVertices, tempColor, gl.TRIANGLE_STRIP));
     numModel++;
     render();
     mode = "";
@@ -54,21 +232,9 @@ function polygonStripClick(e) {
 }
 
 function polygonFanClick(e) {
-  /*
-  Menekan tombol Poligon untuk memulai mode poligon-???
-  Tombol poligon akan berganti menjadi save
-  Memasukkan titik dengan mengeklik canvas dan akan disimpan di array tempVertices sebelum dimasukkan ke all vertices
-  Setelah selesai memasukkan titik klik tombol save maka akan terbentuk poligon
-  */
   if (mode == "poligon-fan") {
     poligonFanButton.innerText = "Poligon FAN";
-    for (let i = 0; i < tempVertices.length; i++) {
-      allVertices.push(tempVertices[i]);
-    }
-    offsetModel[numModel] = numVertices.reduce((total, a) => total + a, 0);
-    numVertices[numModel] = tempVertices.length / 2;
-    typeModel[numModel] = gl.TRIANGLE_FAN;
-    allColor[numModel] = tempColor;
+    modelArray.push(new Polygon(tempVertices, tempColor, gl.TRIANGLE_FAN));
     numModel++;
     render();
     mode = "";
@@ -76,6 +242,16 @@ function polygonFanClick(e) {
     poligonFanButton.innerText = "save";
     tempVertices = [];
     mode = "poligon-fan";
+  }
+}
+
+function deletePointClick(e) {
+  for (let model of modelArray) {
+    if (model.getName() == modelSelected) {
+      model.deletePoint(pointSelected);
+      console.log(model.getVertices());
+      render();
+    }
   }
 }
 
@@ -88,87 +264,244 @@ function mouseClick(e) {
 
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(allVertices), gl.STATIC_DRAW);
 
   for (let i = 0; i < numModel; i++) {
-    console.log(allColor[i]);
-    gl.uniform4fv(colorLocation, allColor[i]);
-    gl.drawArrays(typeModel[i], offsetModel[i], numVertices[i]);
+    modelArray[i].drawModel();
+    document
+      .getElementById(modelArray[i].getName())
+      .addEventListener("click", () => {
+        modelSelected = modelArray[i].getName();
+        pointSelected = "";
+        modelActiveTextArea.innerText = modelSelected;
+        sliderX.setAttribute("value", modelArray[i].getCentroid()[0]);
+        sliderY.setAttribute("value", modelArray[i].getCentroid()[1]);
+        sliderRotation.setAttribute("value", 0);
+      });
+
+    for (let point of modelArray[i].getPointList()) {
+      document.getElementById(point.getName()).addEventListener("click", () => {
+        modelSelected = modelArray[i].getName();
+        pointSelected = point.getName();
+        modelActiveTextArea.innerText =
+          modelSelected +
+          `
+        ` +
+          pointSelected;
+      });
+    }
   }
 }
-////// MAIN //////
 
-var canvas = document.getElementById("gl-canvas");
-var gl = canvas.getContext("webgl");
-if (!gl) {
-  alert("WebGL isn't available");
+var numPolygon = 0;
+
+class Polygon {
+  #id;
+  #name;
+  #vertices;
+  #pointList = [];
+  #numVertices;
+  #verticesColor = [];
+  #centroid = [0, 0];
+  #type;
+  #rotation = [0, 1];
+  #translation = [0, 0];
+  #scale = [1, 1];
+
+  constructor(vertices, verticesColor, type) {
+    numPolygon++;
+    this.#id = numPolygon;
+    this.#name = "Polygon " + this.#id;
+    this.#vertices = vertices;
+    this.#numVertices = vertices.length / 2;
+    for (let i = 0; i < this.#numVertices; i++) {
+      this.#verticesColor.push(verticesColor[0]);
+      this.#verticesColor.push(verticesColor[1]);
+      this.#verticesColor.push(verticesColor[2]);
+      this.#verticesColor.push(verticesColor[3]);
+    }
+    console.log(this.#verticesColor);
+    console.log(this.#vertices);
+    this.#type = type;
+    for (let i = 0; i < this.#numVertices; i++) {
+      this.#centroid[0] += this.#vertices[i * 2];
+      this.#centroid[1] += this.#vertices[i * 2 + 1];
+    }
+    for (let i = 0; i < 2; i++) {
+      this.#centroid[i] /= this.#numVertices;
+    }
+    for (let i = 0; i < this.#numVertices; i++) {
+      this.#pointList.push(
+        new Point(
+          this.#name + " - " + "Point " + (i + 1),
+          this.#vertices[i * 2],
+          this.#vertices[i * 2 + 1],
+          this.#verticesColor
+        )
+      );
+    }
+    console.log(this.#pointList);
+
+    this.createModelButton();
+    this.createPointButton();
+  }
+
+  createModelButton() {
+    fileStructure.innerHTML +=
+      '<button class="model-button" id="' +
+      this.#name +
+      '">' +
+      this.#name +
+      "</button>";
+  }
+
+  createPointButton() {
+    for (let i = 0; i < this.#numVertices; i++) {
+      fileStructure.innerHTML +=
+        '<button class="point-button" id="' +
+        this.#pointList[i].getName() +
+        '">' +
+        this.#pointList[i].getName() +
+        "</button>";
+    }
+  }
+
+  deletePoint(pointName) {
+    for (let i = 0; i < this.#pointList.length; i++) {
+      if (this.#pointList[i].getName() == pointName) {
+        this.#pointList.splice(i, i);
+        this.#vertices.splice(i * 2, 2);
+        this.#numVertices -= 1;
+        document.getElementById(pointSelected).style.display = "none";
+      }
+    }
+  }
+
+  getName() {
+    return this.#name;
+  }
+
+  getCentroid() {
+    return this.#centroid;
+  }
+
+  getVertices() {
+    return this.#vertices;
+  }
+
+  getNumVertices() {
+    return this.#numVertices;
+  }
+
+  getPointList() {
+    return this.#pointList;
+  }
+
+  setVertices(newVertices) {
+    this.#vertices = newVertices;
+  }
+
+  setVerticesColor(newColor) {
+    this.#verticesColor = newColor;
+  }
+
+  setRotation(rotation) {
+    this.#rotation = rotation;
+  }
+
+  setTranslationX(translationX) {
+    this.#translation[0] = translationX;
+  }
+
+  setTranslationY(translationY) {
+    this.#translation[1] = translationY;
+  }
+
+  setScaleX(scaleX) {
+    this.#scale[0] = scaleX;
+  }
+
+  setScaleY(scaleY) {
+    this.#scale[1] = scaleY;
+  }
+
+  updateCentroid() {
+    for (let i = 0; i < this.#numVertices; i++) {
+      this.#centroid[0] += this.#vertices[i * 2];
+      this.#centroid[1] += this.#vertices[i * 2 + 1];
+    }
+    for (let i = 0; i < 2; i++) {
+      this.#centroid[i] /= this.#numVertices;
+    }
+  }
+
+  updateVerticesColor(index, newColor) {
+    this.#verticesColor[index * 4] = newColor[0];
+    this.#verticesColor[index * 4 + 1] = newColor[1];
+    this.#verticesColor[index * 4 + 2] = newColor[2];
+    this.#verticesColor[index * 4 + 3] = newColor[3];
+  }
+
+  updatePointLocationX(index, newCoordinate) {
+    this.#pointList[index].setX(newCoordinate);
+    this.#vertices[index * 2] = newCoordinate;
+  }
+
+  updatePointLocationY(index, newCoordinate) {
+    this.#pointList[index].setY(newCoordinate);
+    this.#vertices[index * 2 + 1] = newCoordinate;
+  }
+
+  flattenVertices() {}
+
+  drawModel() {
+    gl.uniform2fv(rotationLocation, this.#rotation);
+    gl.uniform2fv(translationLocation, this.#translation);
+    gl.uniform2fv(pivotLocation, this.#centroid);
+    gl.uniform2fv(scaleLocation, this.#scale);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(this.#vertices),
+      gl.STATIC_DRAW
+    );
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(this.#verticesColor),
+      gl.STATIC_DRAW
+    );
+
+    gl.drawArrays(this.#type, 0, this.#numVertices);
+  }
 }
 
-var mode = "";
-var poligonStripButton = document.getElementById("poligon-strip");
-var poligonFanButton = document.getElementById("poligon-fan");
-var colorPicker = document.getElementById("color");
+class Point {
+  #name;
+  #coordinate_x;
+  #coordinate_y;
+  #color;
 
-poligonStripButton.addEventListener("click", (e) => {
-  polygonStripClick(e);
-});
+  constructor(name, x, y, color) {
+    this.#name = name;
+    this.#coordinate_x = x;
+    this.#coordinate_y = y;
+    this.#color = color;
+  }
 
-poligonFanButton.addEventListener("click", (e) => {
-  polygonFanClick(e);
-});
+  getName() {
+    return this.#name;
+  }
 
-colorPicker.addEventListener("change", (e) => {
-  let color = e.target.value;
-  let r = parseInt(color.substr(1, 2), 16) / 255;
-  let g = parseInt(color.substr(3, 2), 16) / 255;
-  let b = parseInt(color.substr(5, 2), 16) / 255;
-  tempColor = [r, g, b, 1];
-});
+  setColor(newColor) {
+    this.#color = newColor;
+  }
 
-canvas.addEventListener("click", (e) => {
-  mouseClick(e);
-});
-
-var vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
-var fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
-
-var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-
-var program = createProgram(gl, vertexShader, fragmentShader);
-
-var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-var colorLocation = gl.getUniformLocation(program, "u_color");
-
-var positionBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-var numModel = 0; //Banyaknya model/bangun
-var offsetModel = []; //offset pertama dari setiap model
-var typeModel = []; //tipe primitive dari tiap model
-var numVertices = []; //banyaknya vertex dari tiap model
-var tempVertices = []; //menyimpan vertex sementara
-var allVertices = []; //seluruh vertex yang telah dibuat
-var tempColor = [0, 0, 0, 1]; //nilai color sementara
-var allColor = []; //nilai color setiap model
-
-webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-gl.clearColor(0.8, 0.8, 0.8, 1);
-gl.clear(gl.COLOR_BUFFER_BIT);
-gl.useProgram(program);
-gl.enableVertexAttribArray(positionAttributeLocation);
-
-var size = 2;
-var type = gl.FLOAT;
-var normalize = false;
-var stride = 0;
-var offset = 0;
-gl.vertexAttribPointer(
-  positionAttributeLocation,
-  size,
-  type,
-  normalize,
-  stride,
-  offset
-);
+  setX(x) {
+    this.#coordinate_x = x;
+  }
+  setY(y) {
+    this.#coordinate_y = y;
+  }
+}
