@@ -1,0 +1,68 @@
+<!DOCTYPE html5>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="./WebGL_Logo.png" />
+        <link rel="stylesheet" href="global.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <title>2D Web Based CAD</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="dep">
+                <div class="opt-title">Structure<hr/></div>
+            </div>
+            <canvas class="panel" id="panel">
+                
+            </canvas>
+            <div class="opt">
+                <div class="opt-model">
+                    <div class="opt-title">Model<hr/></div>
+                    <div class="opt-model-bt">
+                        <button class="opt-model-bt-line" id="opt-model-bt-line" onclick="chosenModel('line')">Line</button>
+                        <button class="opt-model-bt-square" id="opt-model-bt-square" onclick="chosenModel('square')">Square</button>
+                        <button class="opt-model-bt-rectangle" id="opt-model-bt-rectangle" onclick="chosenModel('rectangle')">Rectangle</button>
+                        <button class="opt-model-bt-polygon" id="opt-model-bt-polygon" onclick="chosenModel('polygon')">Polygon</button>
+                    </div>
+                </div>
+                <div class="opt-transformation">
+                    <div class="opt-title">Transformation<hr/></div>
+                    <div class="opt-trans-bt">
+                        <button class="opt-trans-bt-translation">Translation</button>
+                        <button class="opt-trans-bt-dilatation">Dilatation</button>
+                        <button class="opt-trans-bt-rotation">Rotation</button>
+                        <button class="opt-trans-bt-shear">Shear</button>
+                    </div>
+                </div>
+                <div class="opt-movevertex">
+                    <div class="opt-title">Move Vertex<hr/></div>
+                    <div class="opt-movevertex-slider">
+                        <input type="range" class="slider" id="slider" min="0" max="1" value="0.5" />
+                        <button class="opt-movevertex-selectvertex">Drag & Drop</button>
+                    </div>
+                </div>
+                <div class="opt-color">
+                    <div class="opt-title">Color<hr/></div>
+                    <div class="opt-color-in">
+                        <input type="color" class="color" id="color" value="#ff0000" />
+                    </div>
+                </div>
+                <div class="opt-file">
+                    <div class="opt-title">Save and Load<hr/></div>
+                    <div class="file-in">
+                        <input type="file" class="loadfile" id="loadfile" />
+                        <button class="opt-file-load">Load</button>
+                        <button class="opt-file-save">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="./setup.js"></script>
+    <script src="./shapes.js"></script>
+    <script src="./main.js"></script>
+    <script src="./scripts.js"></script>
+</html>
