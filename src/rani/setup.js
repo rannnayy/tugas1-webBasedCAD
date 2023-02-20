@@ -12,6 +12,7 @@ var program = gl.createProgram();
 var vao;
 
 var lineShapes = [];
+var squareShapes = [];
 var chosenShape = null;
 var x = 0;
 var y = 0;

@@ -9,6 +9,9 @@ function redraw() {
     selectedPoint.forEach(function (shape) {
         shape.draw();
     });
+    squareShapes.forEach(function (shape) {
+        shape.draw();
+    });
 }
 
 // Display shapes on left panel

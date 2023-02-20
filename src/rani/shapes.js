@@ -70,7 +70,7 @@ class Square extends Shape {
         super("square", vertices, color);
     }
     draw() {
-        super.drawShape(gl.TRIANGLE_STRIP, this.vertices.length);
+        super.drawShape(gl.TRIANGLE_FAN, this.vertices.length);
     }
 }
 
