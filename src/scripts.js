@@ -367,10 +367,8 @@ canvas.addEventListener("click", (e) => {
     else if (currentMode == MODES.Translate && grabbedShape == null) {
         getNearestObject();
 
-        if (selectedDistance < grabbedShape.length()) {
-            let pointPosition = getBoundingCoordinates(grabbedPoint[0], grabbedPoint[1]);
-            selectedPoint = new Square(pointPosition, [0.0, 1.0, 0.0])
-        }
+        let pointPosition = getBoundingCoordinates(grabbedPoint[0], grabbedPoint[1]);
+        selectedPoint = new Square(pointPosition, [0.0, 1.0, 0.0])
 
         // Move A Shape
         selectedPoint.move(x, y);

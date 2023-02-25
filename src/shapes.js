@@ -146,8 +146,22 @@ class Rectangle extends Shape {
 class Polygon extends Shape {
     constructor(vertices, color) {
         super("polygon", vertices, color);
+        let tempX = 0;
+        let tempY = 0;
+        this.vertices.forEach(function (point) {
+          tempX += point[0];
+          tempY += point[1];
+        });
+        this.center[0] = tempX / this.vertices.length;
+        this.center[1] = tempY / this.vertices.length;
     }
     draw() {
         super.drawShape(gl.TRIANGLE_FAN, this.vertices.length);
+    }
+    move(x,y){
+        let dx = x - this.center[0]
+        let dy = y - this.center[1]
+        super.move(dx, dy)
+        this.center = [x,y]
     }
 }
