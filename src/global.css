@@ -1,52 +1,173 @@
-body,
-html {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden
 }
 
 .wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100vw;
-  height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Montserrat Alternates', sans-serif;
+    background-color: #C0EEF2;
 }
 
 .dep {
-  flex-grow: 1;
-  background-color: grey;
-  height: 100vh;
+    background-color: #393E46;
+    height: 100vh;
+    width: 20vw;
+    padding: 3vh 1vw;
 }
 
 .panel {
-  flex-grow: 2;
-  background-color: white;
-  height: 100vh;
+    background-color: white;
+    height: 100vh;
+    width: 100vh;
+    cursor: pointer;
 }
 
 .opt {
-  flex-grow: 1;
-  background-color: grey;
-  height: 100vh;
+    background-color: #393E46;
+    height: 100vh;
+    width: 25vw;
+    padding: 3vh 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    row-gap: 2vh;
 }
 
-canvas {
-  width: 100vh;
-  height: 100vh;
-  display: block;
+.opt-model, 
+.opt-transformation, 
+.opt-movevertex,
+.opt-color,
+.opt-file {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
 
-.model-button {
-  display: block;
+.opt-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.point-button {
-  display: block;
-  margin-left: 20px;
+.opt-title hr {
+    width: 5vw;
+    border: 2px solid #C0EEF2;
+    margin-bottom: .5vh;
 }
 
-textarea {
-  display: block;
+.opt-model-bt,
+.opt-trans-bt {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.opt-movevertex-slider,
+.opt-color-in,
+.opt-file-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    background-color: #00ADB5;
+    border: none;
+    color: #222831;
+    padding: 1vh 1vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+button:active {
+    background-color: #222831;
+    color: white;
+}
+
+input[type="file"] {
+    font-family: "Montserrat", sans-serif;
+}
+
+input::-webkit-file-upload-button {
+    font-family: "Montserrat", sans-serif;
+    background-color: #00ADB5;
+    border: none;
+    color: #222831;
+    padding: 1vh 1vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+input[type="file"]::file-selector-button {
+    font-family: "Montserrat", sans-serif;
+    background-color: #00ADB5;
+    border: none;
+    color: #222831;
+    padding: 1vh 1vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: 1s;
+}
+  
+input[type="file"]::-ms-browse:hover {
+    background-color: #222831;
+}
+  
+input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #222831;
+}
+  
+input[type="file"]::file-selector-button:hover {
+    background-color: #222831;
+}
+
+.opt-special-line,
+.opt-special-square,
+.opt-special-rect,
+.opt-special-polygon {
+    display: none;
+}
+
+.opt-trans-spc-rect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.opt-trans-spc-rect-label {
+    font-family: "Montserrat", sans-serif;
+    font-size: x-small;
+    color: white;
 }

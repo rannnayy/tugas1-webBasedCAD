@@ -5,116 +5,97 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="./WebGL_Logo.png" />
         <link rel="stylesheet" href="global.css">
-        <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
-        <script id="vertex-shader-2d" type="notjs">
-            attribute vec2 a_position;
-            attribute vec4 a_color;
-
-            uniform vec2 u_rotation;
-            uniform vec2 u_translation;
-            uniform vec2 u_scale;
-            uniform vec2 u_pivot;
-
-            varying vec4 v_color;
-
-            void main() {
-                vec2 scaledPosition = a_position * u_scale;
-
-                vec2 rotatedPosition = vec2(
-                    u_pivot.x + (scaledPosition.x - u_pivot.x ) * u_rotation.y + (scaledPosition.y - u_pivot.y) * u_rotation.x,
-                    u_pivot.y + (scaledPosition.y - u_pivot.y) * u_rotation.y - (scaledPosition.x - u_pivot.x) * u_rotation.x);
-
-                vec2 position = rotatedPosition + u_translation;
-                
-                gl_Position = vec4(position, 0 , 1);
-
-                v_color = a_color;
-            }
-        </script>
-            
-        <script id="fragment-shader-2d" type="notjs">
-            precision mediump float;
-
-            varying vec4 v_color;
-            
-            void main() {
-                gl_FragColor = v_color;
-            } 
-        </script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <title>2D Web Based CAD</title>
     </head>
     <body>
         <div class="wrapper">
             <div class="dep">
-                Struktur file
-                <textarea disabled id="modelActive"></textarea>
-                <div id="model-structure">
-                    
-                </div>
-                
+                <div class="opt-title">Structure<hr/></div>
+                <div class="opt-shapes" id="opt-shapes"></div>
             </div>
-            <canvas id="gl-canvas">
+            <canvas class="panel" id="panel">
+                
             </canvas>
             <div class="opt">
-                <div>Option buttons</div>
-                <button id="poligon-strip">Poligon STRIP</button>
-                <button id="poligon-fan">Poligon FAN</button>
-
-                <div>
-                    <label>Color</label> 
-                    <input id="color" type="color">
-                </div>
-
-                <div>
-                    <div>Translasi</div>
-                    <div>
-                        <label for="slider-x">x</label>
-                        <input type="range" name="slider-x" id="slider-x" min="-2" max="2" step="any">
-                    </div>
-                    <div>
-                        <label for="slider-y">y</label>
-                        <input type="range" name="slider-y" id="slider-y" min="-2" max="2" step="any">
+                <div class="opt-model">
+                    <div class="opt-title">Model<hr/></div>
+                    <div class="opt-model-bt">
+                        <button class="opt-model-bt-line" id="opt-model-bt-line" onclick="chosenModel('line')">Line</button>
+                        <button class="opt-model-bt-square" id="opt-model-bt-square" onclick="chosenModel('square')">Square</button>
+                        <button class="opt-model-bt-rectangle" id="opt-model-bt-rectangle" onclick="chosenModel('rectangle')">Rectangle</button>
+                        <button class="opt-model-bt-polygon" id="opt-model-bt-polygon" onclick="chosenModel('polygon')">Polygon</button>
                     </div>
                 </div>
-
-                <div>
-                    <br>
-                    <div>Rotasi</div>
-                    <div>
-                        <label for="rotasi">Angle</label>
-                        <input type="range" name="rotasi" id="rotasi" min="0" max="360" step="any" >
+                <div class="opt-transformation">
+                    <div class="opt-title">Transformation<hr/></div>
+                    <div class="opt-trans-bt">
+                        <button class="opt-trans-bt-translation">Translation</button>
+                        <button class="opt-trans-bt-dilatation">Dilatation</button>
+                        <button class="opt-trans-bt-rotation">Rotation</button>
+                        <button class="opt-trans-bt-shear">Shear</button>
                     </div>
                 </div>
-                <div>
-                    <br>
-                    <div>Scale</div>
-                    <label for="scale-x">x</label>
-                    <input type="range" name="scale-x" id="scale-x" min="-3" max="3" step="any" value = "1">
-                </div>
-                <div>
-                    <label for="scale-y">y</label>
-                    <input type="range" name="scale-y" id="scale-y" min="-3" max="3" step="any" value = "1">
-                </div>
-                <div>
-                    <br>
-                    <button id="delete_point">Delete Point</button>
-                    <br>
-                    <label>Point Color</label> 
-                    <input id="point_color" type="color">
-                    <br>
-                    <br>
-                    <label for="">Move Point</label>
-                    <div>
-                        <label for="">x</label>
-                        <input type="range" name="slider-point-x" id="slider-point-x" min="-2" max="2" step="any">
+                <div class="opt-movevertex">
+                    <div class="opt-title">Move Vertex<hr/></div>
+                    <div class="opt-movevertex-slider">
+                        <input type="range" class="slider" id="slider" min="0" max="1" value="0.5" />
+                        <button class="opt-movevertex-selectvertex">Drag & Drop</button>
                     </div>
-                    <div>
-                        <label for="">y</label>
-                        <input type="range" name="slider-point-y" id="slider-point-y" min="-2" max="2" step="any">
+                </div>
+                <div class="opt-color">
+                    <div class="opt-title">Color<hr/></div>
+                    <div class="opt-color-in">
+                        <input type="color" class="color" id="color" value="#ff0000" />
+                    </div>
+                </div>
+                <div class="opt-file">
+                    <div class="opt-title">Save and Load<hr/></div>
+                    <div class="file-in">
+                        <input type="file" class="loadfile" id="loadfile" />
+                        <button class="opt-file-load">Load</button>
+                        <button class="opt-file-save">Save</button>
+                    </div>
+                </div>
+                <div class="opt-special-line">
+                    <div class="opt-title-special opt-title">Change Line Length<hr/></div>
+                    <div class="opt-trans-spc" id="opt-trans-spc">
+                        <input type="number" id="input-line" />
+                    </div>
+                </div>
+                <div class="opt-special-square">
+                    <div class="opt-title-special opt-title">Change Sides Length<hr/></div>
+                    <div class="opt-trans-spc" id="opt-trans-spc">
+                        <input type="number" id="input-square" />
+                    </div>
+                </div>
+                <div class="opt-special-rect">
+                    <div class="opt-title-special opt-title">Change Sides Length<hr/></div>
+                    <div class="opt-trans-spc-rect" id="opt-trans-spc">
+                        <form>
+                            <label class="opt-trans-spc-rect-label" for="input-rect-length">Length</label>
+                            <input type="number" name="input-rect-length" id="input-rect-length" />
+                        </form>
+                        <form>
+                            <label class="opt-trans-spc-rect-label" for="input-rect-width">Width</label>
+                            <input type="number" name="input-rect-width" id="input-rect-width" />
+                        </form>
+                    </div>
+                </div>
+                <div class="opt-special-polygon">
+                    <div class="opt-title-special opt-title">Delete A Vertex<hr/></div>
+                    <div class="opt-trans-spc" id="opt-trans-spc">
+                        <button id="input-polygon">Delete this vertex</button>
                     </div>
                 </div>
             </div>
         </div>
     </body>
+    <script src="./setup.js"></script>
+    <script src="./shapes.js"></script>
+    <script src="./main.js"></script>
     <script src="./scripts.js"></script>
 </html>
