@@ -70,6 +70,9 @@ class Line extends Shape {
         super.move(dx, dy);
         this.center = [x, y];
     }
+    length() {
+        return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[1][0], this.vertices[1][1]);
+    }
 }
 
 class Triangle extends Shape {
@@ -115,6 +118,19 @@ class Square extends Shape {
         let dy = y - center_y;
         super.move(dx, dy);
         this.center = [x, y];
+    }
+    length() {
+        return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[1][0], this.vertices[1][1]);
+    }
+    shear(id, x, y) {
+        let oppId = this.getOppositeVertex(id);
+        for (let i=0; i<this.vertices.length; i++) {
+            if (i != oppId) {
+                let dx = x - this.vertices[id][0];
+                let dy = y - this.vertices[id][1];
+                super.moveVertex(i, this.vertices[i][0] + dx, this.vertices[i][1] + dy);
+            }
+        }
     }
 }
 

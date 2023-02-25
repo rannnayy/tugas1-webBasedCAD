@@ -33,17 +33,10 @@
                 <div class="opt-transformation">
                     <div class="opt-title">Transformation<hr/></div>
                     <div class="opt-trans-bt">
-                        <button class="opt-trans-bt-translation">Translation</button>
-                        <button class="opt-trans-bt-dilatation">Dilatation</button>
-                        <button class="opt-trans-bt-rotation">Rotation</button>
-                        <button class="opt-trans-bt-shear">Shear</button>
-                    </div>
-                </div>
-                <div class="opt-movevertex">
-                    <div class="opt-title">Move Vertex<hr/></div>
-                    <div class="opt-movevertex-slider">
-                        <input type="range" class="slider" id="slider" min="0" max="1" value="0.5" />
-                        <button class="opt-movevertex-selectvertex">Drag & Drop</button>
+                        <button class="opt-trans-bt-translation" id="opt-trans-bt-translation" onclick="chosenTransformation('Translate')" >Translation</button>
+                        <button class="opt-trans-bt-dilatation" id="opt-trans-bt-dilatation" onclick="chosenTransformation('Dilate')" >Dilatation</button>
+                        <button class="opt-trans-bt-rotation" id="opt-trans-bt-rotation" onclick="chosenTransformation('Rotate')" >Rotation</button>
+                        <button class="opt-trans-bt-shear" id="opt-trans-bt-shear" onclick="chosenTransformation('Shear')" >Shear</button>
                     </div>
                 </div>
                 <div class="opt-color">

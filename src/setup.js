@@ -17,20 +17,32 @@ var chosenShape = null;
 var x = 0;
 var y = 0;
 var currShape = null;
+
 var selectedShape = null;
 var selectedVertex = null;
 var selectedVertexID = null;
 var selectedPoint = null;
 var selectedDistance = Infinity;
 
+var grabbedShape = null;
+var grabbedPoint = null;
+
+var shearedShape = null;
+var shearedVertexID = null;
+var shearedPoint = null;
+var shearedDistance = Infinity;
+
 var model = "";
 var positions = [];
 
 const MODES = {
     Drawing: Symbol("Drawing"),
-    Selecting: Symbol("Selecting"),
     Moving: Symbol("Moving"),
-    None: Symbol("None")
+    None: Symbol("None"),
+    Translate: Symbol("Translate"),
+    Dilate: Symbol("Dilate"),
+    Rotate: Symbol("Rotate"),
+    Shear: Symbol("Shear"),
 }
 
 var currentMode = MODES.None;

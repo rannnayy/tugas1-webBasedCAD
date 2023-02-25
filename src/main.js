@@ -8,10 +8,10 @@ function redraw() {
     lineShapes.forEach(function (shape) {
         shape.draw();
     });
-    selectedPoint.draw();
     squareShapes.forEach(function (shape) {
         shape.draw();
     });
+    selectedPoint.draw();
 
     displayShapes();
 }

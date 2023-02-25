@@ -42,8 +42,7 @@ body, html {
 }
 
 .opt-model, 
-.opt-transformation, 
-.opt-movevertex,
+.opt-transformation,
 .opt-color,
 .opt-file {
     display: flex;
@@ -77,7 +76,6 @@ body, html {
     justify-content: center;
 }
 
-.opt-movevertex-slider,
 .opt-color-in,
 .opt-file-in {
     display: flex;
@@ -98,6 +96,9 @@ button {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-size: x-small;
+    font-weight: bold;
 }
 
 button:active {
@@ -111,6 +112,8 @@ input[type="file"] {
 
 input::-webkit-file-upload-button {
     font-family: "Montserrat", sans-serif;
+    font-size: x-small;
+    font-weight: bold;
     background-color: #00ADB5;
     border: none;
     color: #222831;
@@ -118,7 +121,6 @@ input::-webkit-file-upload-button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 12px;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 15px;
@@ -126,6 +128,8 @@ input::-webkit-file-upload-button {
 
 input[type="file"]::file-selector-button {
     font-family: "Montserrat", sans-serif;
+    font-size: x-small;
+    font-weight: bold;
     background-color: #00ADB5;
     border: none;
     color: #222831;
@@ -133,7 +137,6 @@ input[type="file"]::file-selector-button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 12px;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 15px;
