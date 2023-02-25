@@ -32,13 +32,13 @@ body, html {
 .opt {
     background-color: #393E46;
     height: 100vh;
-    max-width: 20vw;
+    width: 25vw;
     padding: 3vh 1vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    row-gap: 3vh;
+    row-gap: 2vh;
 }
 
 .opt-model, 
@@ -53,7 +53,7 @@ body, html {
 }
 
 .opt-title {
-    font-size: 1em;
+    font-size: 16px;
     font-weight: bold;
     color: white;
     display: flex;
@@ -65,7 +65,7 @@ body, html {
 .opt-title hr {
     width: 5vw;
     border: 2px solid #C0EEF2;
-    margin-bottom: 1vh;
+    margin-bottom: .5vh;
 }
 
 .opt-model-bt,
@@ -94,7 +94,7 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 12px;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 15px;
@@ -102,5 +102,72 @@ button {
 
 button:active {
     background-color: #222831;
+    color: white;
+}
+
+input[type="file"] {
+    font-family: "Montserrat", sans-serif;
+}
+
+input::-webkit-file-upload-button {
+    font-family: "Montserrat", sans-serif;
+    background-color: #00ADB5;
+    border: none;
+    color: #222831;
+    padding: 1vh 1vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+input[type="file"]::file-selector-button {
+    font-family: "Montserrat", sans-serif;
+    background-color: #00ADB5;
+    border: none;
+    color: #222831;
+    padding: 1vh 1vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: 1s;
+}
+  
+input[type="file"]::-ms-browse:hover {
+    background-color: #222831;
+}
+  
+input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #222831;
+}
+  
+input[type="file"]::file-selector-button:hover {
+    background-color: #222831;
+}
+
+.opt-special-line,
+.opt-special-square,
+.opt-special-rect,
+.opt-special-polygon {
+    display: none;
+}
+
+.opt-trans-spc-rect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.opt-trans-spc-rect-label {
+    font-family: "Montserrat", sans-serif;
+    font-size: x-small;
     color: white;
 }

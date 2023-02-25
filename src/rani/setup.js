@@ -20,12 +20,20 @@ var currShape = null;
 var selectedShape = null;
 var selectedVertex = null;
 var selectedVertexID = null;
-var selectedPoint = [];
+var selectedPoint = null;
 var selectedDistance = Infinity;
-var snap = false;
 
 var model = "";
 var positions = [];
+
+const MODES = {
+    Drawing: Symbol("Drawing"),
+    Selecting: Symbol("Selecting"),
+    Moving: Symbol("Moving"),
+    None: Symbol("None")
+}
+
+var currentMode = MODES.None;
 
 function createShader(type, source) {
     shader = gl.createShader(type);

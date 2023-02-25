@@ -11,6 +11,12 @@ class Shape {
     moveVertex(id, x, y) {
         this.vertices[id] = [x, y];
     }
+    move(dx, dy) {
+        this.vertices.forEach(vert => {
+            vert[0] += dx;
+            vert[1] += dy;
+        });
+    }
     drawShape(gl_shape, num_objs) {
         var vert = []
         for (let i = 0; i < this.vertices.length; i++) {
@@ -20,7 +26,7 @@ class Shape {
                 vert.push(this.color[j])
             }
         }
-        console.log(vert)
+        // console.log(vert)
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vert), gl.STATIC_DRAW);
         gl.drawArrays(gl_shape, 0, num_objs);
     }
@@ -45,14 +51,18 @@ class Line extends Shape {
     addVertex(x, y) {
         super.addVertex(x, y);
     }
-    moveVertex(x, y) {
-        super.moveVertex(x, y);
-    }
     draw() {
         super.drawShape(gl.LINE_STRIP, this.vertices.length);
     }
     moveVertex(id, x, y) {
         super.moveVertex(id, x, y);
+    }
+    move(x, y) {
+        let center_x = (this.vertices[0][0] + this.vertices[1][0]) / 2;
+        let center_y = (this.vertices[0][1] + this.vertices[1][1]) / 2;
+        let dx = x - center_x;
+        let dy = y - center_y;
+        super.move(dx, dy);
     }
 }
 
@@ -71,6 +81,16 @@ class Square extends Shape {
     }
     draw() {
         super.drawShape(gl.TRIANGLE_FAN, this.vertices.length);
+    }
+    moveVertex(id, x, y) {
+        super.moveVertex(id, x, y);
+    }
+    move(x, y) {
+        let center_x = (this.vertices[0][0] + this.vertices[2][0]) / 2;
+        let center_y = (this.vertices[0][1] + this.vertices[2][1]) / 2;
+        let dx = x - center_x;
+        let dy = y - center_y;
+        super.move(dx, dy);
     }
 }
 
