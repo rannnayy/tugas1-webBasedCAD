@@ -491,7 +491,7 @@ document.getElementsByClassName("opt-file-load")[0].addEventListener("click", (e
 document.getElementsByClassName("opt-file-save")[0].addEventListener("click", (e) => {
     let saveFile = document.createElement('a')
     saveFile.style.display = 'none'
-    let text = selectedShape.type + "\n" + JSON.stringify(selectedShape.vertices) + "\n" + JSON.stringify(selectedShape.color)
+    let text = selectedShape.type + "\r\n" + JSON.stringify(selectedShape.vertices) + "\r\n" + JSON.stringify(selectedShape.color)
     saveFile.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
     saveFile.setAttribute("download", selectedShape.type);
 
