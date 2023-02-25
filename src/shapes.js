@@ -145,6 +145,8 @@ class Rectangle extends Shape {
 
 class Polygon extends Shape {
     constructor(vertices, color) {
+                console.log(vertices);
+                console.log(color);
         super("polygon", vertices, color);
         let tempX = 0;
         let tempY = 0;

@@ -468,3 +468,37 @@ document.getElementById("input-square").addEventListener("change", (e) => {
     }
     redraw();
 });
+
+
+document.getElementsByClassName("opt-file-load")[0].addEventListener("click", (e) => {
+    let file = document.getElementById("loadfile").files[0]
+    if(file != undefined){
+        console.log(file);
+        let fr = new FileReader();
+        fr.readAsText(file);
+        fr.onload = function () {
+        let tempShape = fr.result.split("\r\n");
+        if (tempShape[0] == "polygon") {
+            polygonShapes.push(
+            new Polygon(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
+            );
+        }
+        };
+        redraw();
+    }
+})
+
+document.getElementsByClassName("opt-file-save")[0].addEventListener("click", (e) => {
+    let saveFile = document.createElement('a')
+    saveFile.style.display = 'none'
+    let text = selectedShape.type + "\n" + JSON.stringify(selectedShape.vertices) + "\n" + JSON.stringify(selectedShape.color)
+    saveFile.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
+    saveFile.setAttribute("download", selectedShape.type);
+
+    saveFile.click();
+    
+    document.body.removeChild(saveFile);
+});
+
+
+
