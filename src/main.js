@@ -28,6 +28,7 @@ function displayShapes() {
 
   polygonShapes.forEach(function (shape) {
     var btn = document.createElement("button");
+    btn.setAttribute("class", "btn-shape");
     btn.innerHTML = shape.type;
     btn.setAttribute("class", "btn-shape");
     btn.addEventListener("click", function () {
@@ -61,6 +62,7 @@ function displayShapes() {
   // Display all shapes as button
   lineShapes.forEach(function (shape) {
     var btn = document.createElement("button");
+    btn.setAttribute("class", "btn-shape");
     btn.innerHTML = shape.type;
     btn.addEventListener("click", function () {
       currentMode = MODES.Selecting;
@@ -75,6 +77,7 @@ function displayShapes() {
     // Display all vertex in shape as button
     shape.vertices.forEach(function (vertex, id) {
       var btn = document.createElement("button");
+      btn.setAttribute("class", "btn-vertex");
       btn.innerHTML = "Vertex " + id;
       btn.addEventListener("click", function () {
         currentMode = MODES.Selecting;
@@ -91,6 +94,7 @@ function displayShapes() {
 
   squareShapes.forEach(function (shape) {
     var btn = document.createElement("button");
+    btn.setAttribute("class", "btn-shape");
     btn.innerHTML = shape.type;
     btn.addEventListener("click", function () {
       currentMode = MODES.Selecting;
@@ -105,6 +109,7 @@ function displayShapes() {
     // Display all vertex in shape as button
     shape.vertices.forEach(function (vertex, id) {
       var btn = document.createElement("button");
+      btn.setAttribute("class", "btn-vertex");
       btn.innerHTML = "Vertex " + id;
       btn.addEventListener("click", function () {
         currentMode = MODES.Selecting;
