@@ -66,6 +66,8 @@ function chosenModel(model) {
         document.getElementById("opt-model-bt-rectangle").style.color = "#222831";
         document.getElementById("opt-model-bt-polygon").style.background = "#222831";
         document.getElementById("opt-model-bt-polygon").style.color = "#FFFFFF";
+        document.getElementById("opt-model-bt-polygon").textContent = "Save";
+        document.getElementById("opt-model-bt-polygon").setAttribute("onclick", "chosenModel('polygon-save')")
 
         chosenShape = "polygon";
         currentMode = MODES.Drawing;
@@ -75,6 +77,33 @@ function chosenModel(model) {
         document.getElementsByClassName("opt-special-square")[0].style.display = "none";
         document.getElementsByClassName("opt-special-rect")[0].style.display = "none";
         document.getElementsByClassName("opt-special-polygon")[0].style.display = "block";
+    }
+    else if (model == "polygon-save") {
+        document.getElementById("opt-model-bt-line").style.background = "#00ADB5";
+        document.getElementById("opt-model-bt-line").style.color = "#222831";
+        document.getElementById("opt-model-bt-square").style.background = "#00ADB5";
+        document.getElementById("opt-model-bt-square").style.color = "#222831";
+        document.getElementById("opt-model-bt-rectangle").style.background = "#00ADB5";
+        document.getElementById("opt-model-bt-rectangle").style.color = "#222831";
+        document.getElementById("opt-model-bt-polygon").style.background = "#00ADB5";
+        document.getElementById("opt-model-bt-polygon").style.color = "#222831";
+        document.getElementById("opt-model-bt-polygon").textContent = "Polygon";
+        document.getElementById("opt-model-bt-polygon").setAttribute("onclick", "chosenModel('polygon')")
+
+        currShape = new Polygon(positions, [1.0, 0.0, 0.0]);
+        polygonShapes.push(currShape)
+        positions = []
+        chosenShape = null;
+        currShape = null;
+        currentMode = MODES.None;
+
+        redraw()
+
+        // Special Input
+        document.getElementsByClassName("opt-special-line")[0].style.display = "none";
+        document.getElementsByClassName("opt-special-square")[0].style.display = "none";
+        document.getElementsByClassName("opt-special-rect")[0].style.display = "none";
+        document.getElementsByClassName("opt-special-polygon")[0].style.display = "none";
     }
 }
 
@@ -133,6 +162,17 @@ function getNearestVertex() {
             }
         }
     }
+    for (let j = 0; j < polygonShapes.length; j++) {
+        for (let i = 0; i < polygonShapes[j].vertices.length; i++) {
+            let tempDistance = countDistancePoints(x, y, polygonShapes[j].vertices[i][0], polygonShapes[j].vertices[i][1]);
+            if (tempDistance < selectedDistance) {
+                selectedDistance = tempDistance;
+                selectedShape = polygonShapes[j];
+                selectedVertex = polygonShapes[j].vertices[i];
+                selectedVertexID = i;
+            }
+        }
+    }
     document.body.style.cursor = "move";
 }
 
@@ -178,6 +218,14 @@ function getNearestObject() {
             selectedDistance = tempDistance;
             grabbedShape = squareShapes[j];
             grabbedPoint = squareShapes[j].center;
+        }
+    }
+    for (let j = 0; j < polygonShapes.length; j++) {
+        let tempDistance = countDistancePoints(x, y, polygonShapes[j].center[0], polygonShapes[j].center[1]);
+        if (tempDistance < selectedDistance) {
+            selectedDistance = tempDistance;
+            grabbedShape = polygonShapes[j];
+            grabbedPoint = polygonShapes[j].center;
         }
     }
     document.body.style.cursor = "grab";
@@ -292,6 +340,9 @@ canvas.addEventListener("click", (e) => {
                 document.getElementById("opt-model-bt-square").style.background = "#00ADB5";
                 document.getElementById("opt-model-bt-square").style.color = "#222831";
             }
+        }
+        else if(chosenShape == "polygon"){
+          positions.push([x, y]);
         }
     }
     else if (currentMode == MODES.None && selectedShape != null) {
