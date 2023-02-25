@@ -14,10 +14,8 @@ function redraw() {
   polygonShapes.forEach(function (shape) {
     shape.draw();
   });
-  console.log("BBBBBBBBBBBBBBBB");
   selectedPoint.draw();
 
-  console.log("AAAAAAAAAAAAAAA");
   displayShapes();
 }
 
