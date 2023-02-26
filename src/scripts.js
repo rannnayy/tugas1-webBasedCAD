@@ -392,13 +392,14 @@ canvas.addEventListener("click", (e) => {
     }
     else if (currentMode == MODES.Color && coloredShape == null) {
         getNearestVertex();
-        let dist = selectedDistance;
+        let dist = selectedDistance.valueOf();
         coloredShape = selectedShape;
         coloredVertex = selectedVertex;
         coloredVertexID = selectedVertexID;
         coloredPoint = selectedPoint;
 
         getNearestObject();
+        console.log(selectedDistance, dist);
         if (selectedDistance < dist) {
             coloredShape = selectedShape;
             coloredVertex = null;
@@ -410,7 +411,7 @@ canvas.addEventListener("click", (e) => {
         }
         else {
             // Color the Vertex
-            coloredShape.color(coloredVertexID, redColor, greenColor, blueColor);
+            coloredShape.colorVertex(coloredVertexID, redColor, greenColor, blueColor);
         }
         
         currentMode = MODES.None;

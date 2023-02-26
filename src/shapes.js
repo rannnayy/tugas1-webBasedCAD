@@ -5,12 +5,11 @@ class Shape {
         this.vertices = vertices;
         this.center = [];
 
-        let temp = []
+        let temp = [];
         for (let i = 0; i < this.vertices.length; i++) {
             temp[i] = [color[0], color[1], color[2]];
         }
-        this.color = temp
-        console.log(this.color)
+        this.color = temp;
     }
     color(id, r, g, b) {
         this.color[id] = [r, g, b];
@@ -93,7 +92,7 @@ class Line extends Shape {
     length() {
         return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[1][0], this.vertices[1][1]);
     }
-    color(id, r, g, b) {
+    colorVertex(id, r, g, b) {
         super.color(id, r, g, b);
     }
     colorAll(r, g, b) {
@@ -158,7 +157,7 @@ class Square extends Shape {
             }
         }
     }
-    color(id, r, g, b) {
+    colorVertex(id, r, g, b) {
         super.color(id, r, g, b);
     }
     colorAll(r, g, b) {
