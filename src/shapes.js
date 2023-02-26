@@ -4,6 +4,8 @@ class Shape {
         this.type = type;
         this.vertices = vertices;
         this.center = [];
+        this.previous_click = [0,0];
+        this.previous_position = [0,0];
 
         let temp = [];
         for (let i = 0; i < this.vertices.length; i++) {
@@ -114,13 +116,24 @@ class Line extends Shape {
         }
     }
     rotate(x, y) {
-        let angle = Math.atan2(y - this.center[1], x - this.center[0]) - Math.atan2(this.vertices[0][1] - this.center[1], this.vertices[0][0] - this.center[0]);
-        
         for (let i = 0; i < this.vertices.length; i++) {
-            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * Math.cos(angle) - (this.vertices[i][1] - this.center[1]) * Math.sin(angle);
-            this.vertices[i][1] = this.center[1] + (this.vertices[i][0] - this.center[0]) * Math.sin(angle) + (this.vertices[i][1] - this.center[1]) * Math.cos(angle);
+            let dX = this.vertices[i][0] - this.center[0];
+            let dY = this.vertices[i][1] - this.center[1]; 
+            let angle;
+            if (x < this.previous_click[0]) {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 + this.previous_click[0]);
+            }
+            else {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 - this.previous_click[0]);
+            }
+            let radius = Math.sqrt(dX*dX + dY*dY);
+            this.vertices[i][0] = this.center[0] + radius * Math.cos(angle);
+            this.vertices[i][1] = this.center[1] + radius * Math.sin(angle);
         }
-        // this.vertices[i][0] = this.center[0] + x * Math.cos(angle) - y * Math.sin(angle);
+        this.previous_position=[x,y];
+    }
+    addPrevPosClick(x,y) {
+        this.previous_click = [x,y];
     }
 }
 
@@ -193,12 +206,24 @@ class Square extends Shape {
         }
     }
     rotate(x, y) {
-        let angle = Math.atan2(y - this.center[1], x - this.center[0]) - Math.atan2(this.vertices[0][1] - this.center[1], this.vertices[0][0] - this.center[0]);
         for (let i = 0; i < this.vertices.length; i++) {
-            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * Math.cos(angle) - (this.vertices[i][1] - this.center[1]) * Math.sin(angle);
-            this.vertices[i][1] = this.center[1] + (this.vertices[i][0] - this.center[0]) * Math.sin(angle) + (this.vertices[i][1] - this.center[1]) * Math.cos(angle);
+            let dX = this.vertices[i][0] - this.center[0];
+            let dY = this.vertices[i][1] - this.center[1]; 
+            let angle;
+            if (x < this.previous_click[0]) {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 + this.previous_click[0]);
+            }
+            else {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 - this.previous_click[0]);
+            }
+            let radius = Math.sqrt(dX*dX + dY*dY);
+            this.vertices[i][0] = this.center[0] + radius * Math.cos(angle);
+            this.vertices[i][1] = this.center[1] + radius * Math.sin(angle);
         }
-        // this.vertices[i][0] = this.center[0] + x * Math.cos(angle) - y * Math.sin(angle);
+        this.previous_position=[x,y];
+    }
+    addPrevPosClick(x,y) {
+        this.previous_click = [x,y];
     }
 }
 
@@ -243,14 +268,12 @@ class Rectangle extends Shape {
     width() {
         return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[1][0], this.vertices[1][1]);
     }
-    shear(id, x, y) {
-        let oppId = this.getOppositeVertex(id);
+    shear(x, y) {
+        let shx = (x - this.center[0]) / (this.length());
+        let shy = (y - this.center[1]) / (this.length());
         for (let i=0; i<this.vertices.length; i++) {
-            if (i != oppId) {
-                let dx = x - this.vertices[id][0];
-                let dy = y - this.vertices[id][1];
-                super.moveVertex(i, this.vertices[i][0] + dx, this.vertices[i][1] + dy);
-            }
+            this.vertices[i][0] = this.vertices[i][0] + (this.vertices[i][1] - this.center[1]) * shx;
+            this.vertices[i][1] = this.vertices[i][1] + (this.vertices[i][0] - this.center[0]) * shy;
         }
     }
     colorVertex(id, r, g, b) {
@@ -267,11 +290,24 @@ class Rectangle extends Shape {
         }
     }
     rotate(x, y) {
-        let angle = Math.atan2(y - this.center[1], x - this.center[0]) - Math.atan2(this.vertices[0][1] - this.center[1], this.vertices[0][0] - this.center[0]);
         for (let i = 0; i < this.vertices.length; i++) {
-            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * Math.cos(angle) - (this.vertices[i][1] - this.center[1]) * Math.sin(angle);
-            this.vertices[i][1] = this.center[1] + (this.vertices[i][0] - this.center[0]) * Math.sin(angle) + (this.vertices[i][1] - this.center[1]) * Math.cos(angle);
+            let dX = this.vertices[i][0] - this.center[0];
+            let dY = this.vertices[i][1] - this.center[1]; 
+            let angle;
+            if (x < this.previous_click[0]) {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 + this.previous_click[0]);
+            }
+            else {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 - this.previous_click[0]);
+            }
+            let radius = Math.sqrt(dX*dX + dY*dY);
+            this.vertices[i][0] = this.center[0] + radius * Math.cos(angle);
+            this.vertices[i][1] = this.center[1] + radius * Math.sin(angle);
         }
+        this.previous_position=[x,y];
+    }
+    addPrevPosClick(x,y) {
+        this.previous_click = [x,y];
     }
 }
 

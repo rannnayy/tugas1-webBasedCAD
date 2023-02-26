@@ -474,7 +474,7 @@ canvas.addEventListener("click", (e) => {
 
         // Move A Shape
         selectedPoint.move(x, y);
-        rotatedShape.rotate(x, y);
+        rotatedShape.addPrevPosClick(x,y);
         
         document.body.style.cursor = "grabbing";
     }
@@ -641,7 +641,6 @@ document.getElementById("input-rect-length").addEventListener("change", (e) => {
     if (currentMode == MODES.None && selectedShape != null && selectedShape instanceof Rectangle) {
         let newLength = parseFloat(e.target.value) * Math.sqrt(2);
         let oldLength = selectedShape.length();
-        console.log("ada")
         // Count new position of the third vertex
         let x1 = selectedShape.vertices[0][0];
         let y1 = selectedShape.vertices[0][1];
@@ -695,6 +694,11 @@ document.getElementsByClassName("opt-file-load")[0].addEventListener("click", (e
             else if (tempShape[0] == "square") {
                 squareShapes.push(
                 new Square(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
+                );
+            }
+            else if (tempShape[0] == "rectangle") {
+                squareShapes.push(
+                new Rectangle(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
                 );
             }
         };
