@@ -11,6 +11,9 @@ function redraw() {
   squareShapes.forEach(function (shape) {
     shape.draw();
   });
+  rectangleShapes.forEach(function (shape) {
+    shape.draw();
+  });
   polygonShapes.forEach(function (shape) {
     shape.draw();
   });
@@ -89,6 +92,34 @@ function displayShapes() {
   });
 
   squareShapes.forEach(function (shape) {
+    var btn = document.createElement("button");
+    btn.setAttribute("class", "btn-shape");
+    btn.innerHTML = shape.type;
+    btn.addEventListener("click", function () {
+      currentMode = MODES.Selecting;
+      selectedShape = shape;
+      selectedVertex = null;
+      selectedVertexID = null;
+      redraw();
+    });
+    structurePanel.appendChild(btn);
+    // Display all vertex in shape as button
+    shape.vertices.forEach(function (vertex, id) {
+      var btn = document.createElement("button");
+      btn.setAttribute("class", "btn-vertex");
+      btn.innerHTML = "Vertex " + id;
+      btn.addEventListener("click", function () {
+        currentMode = MODES.Selecting;
+        selectedShape = shape;
+        selectedVertex = vertex;
+        selectedVertexID = id;
+        redraw();
+      });
+      structurePanel.appendChild(btn);
+    });
+  });
+  
+  rectangleShapes.forEach(function (shape) {
     var btn = document.createElement("button");
     btn.setAttribute("class", "btn-shape");
     btn.innerHTML = shape.type;

@@ -154,6 +154,7 @@ function getNearestVertex() {
     let in_selectedVertexID = null;
     let in_selectedDistance = Infinity;
     
+    
     for (let j = 0; j < lineShapes.length; j++) {
         for (let i = 0; i < lineShapes[j].vertices.length; i++) {
             let tempDistance = countDistancePoints(x, y, lineShapes[j].vertices[i][0], lineShapes[j].vertices[i][1]);
@@ -176,6 +177,18 @@ function getNearestVertex() {
             }
         }
     }
+    for (let j = 0; j < rectangleShapes.length; j++) {
+        for (let i = 0; i < rectangleShapes[j].vertices.length; i++) {
+            let tempDistance = countDistancePoints(x, y, rectangleShapes[j].vertices[i][0], rectangleShapes[j].vertices[i][1]);
+            if (tempDistance < in_selectedDistance) {
+                in_selectedDistance = tempDistance;
+                in_selectedShape = rectangleShapes[j];
+                in_selectedVertex = rectangleShapes[j].vertices[i];
+                in_selectedVertexID = i;
+            }
+        }
+    }
+    
     for (let j = 0; j < polygonShapes.length; j++) {
         for (let i = 0; i < polygonShapes[j].vertices.length; i++) {
             let tempDistance = countDistancePoints(x, y, polygonShapes[j].vertices[i][0], polygonShapes[j].vertices[i][1]);
@@ -197,6 +210,7 @@ function getNearestObject() {
     let in_grabbedPoint = null;
     let in_selectedDistance = Infinity;
     
+    
     for (let j = 0; j < lineShapes.length; j++) {
         let tempDistance = countDistancePoints(x, y, lineShapes[j].center[0], lineShapes[j].center[1]);
         if (tempDistance < in_selectedDistance) {
@@ -213,6 +227,15 @@ function getNearestObject() {
             in_grabbedPoint = squareShapes[j].center;
         }
     }
+    for (let j = 0; j < rectangleShapes.length; j++) {
+        let tempDistance = countDistancePoints(x, y, rectangleShapes[j].center[0], rectangleShapes[j].center[1]);
+        if (tempDistance < in_selectedDistance) {
+            in_selectedDistance = tempDistance;
+            in_grabbedShape = rectangleShapes[j];
+            in_grabbedPoint = rectangleShapes[j].center;
+        }
+    }
+  
     for (let j = 0; j < polygonShapes.length; j++) {
         let tempDistance = countDistancePoints(x, y, polygonShapes[j].center[0], polygonShapes[j].center[1]);
         if (tempDistance < in_selectedDistance) {
@@ -254,10 +277,23 @@ canvas.addEventListener("mousemove", (e) => {
             squareShapes.push(currShape);
             document.getElementById("input-square").value = currShape.length();
         }
+        else if (chosenShape == "rectangle") {
+            if (positions.length > 1) {
+                rectangleShapes.pop();
+            }
+            while (positions.length > 1) {
+                positions.pop();
+            }
+            positions = countRectangleVertices(positions[0][0], positions[0][1], x, y);
+            
+            currShape = new Rectangle(positions, [redColor, greenColor, blueColor]);
+            rectangleShapes.push(currShape);
+            document.getElementById("input-rect-length").value = currShape.length();
+            document.getElementById("input-rect-width").value = currShape.width();
+        }
     }
     else if (currentMode == MODES.None && currShape == null) {
         [selectedShape, selectedVertex, selectedVertexID, selectedDistance] = getNearestVertex();
-        
         selectedPoint = new Point(selectedVertex);
     }
     else if (currentMode == MODES.Moving) {
@@ -340,6 +376,28 @@ canvas.addEventListener("click", (e) => {
                 currentMode = MODES.None;
                 document.getElementById("opt-model-bt-square").style.background = "#00ADB5";
                 document.getElementById("opt-model-bt-square").style.color = "#222831";
+            }
+        }
+        else if (chosenShape == "rectangle") {
+            if (positions.length < 1) {
+                positions.push([x, y]);
+            } else if (positions.length >= 1) {
+                while (positions.length > 1) {
+                    positions.pop();
+                }
+                positions = countRectangleVertices(positions[0][0], positions[0][1], x, y);
+                getColor();
+                currShape = new Rectangle(positions, [redColor, greenColor, blueColor]);
+                rectangleShapes.pop();
+                rectangleShapes.push(currShape);
+                document.getElementById("input-rect-length").value = currShape.length();
+                document.getElementById("input-rect-width").value = currShape.width();
+                positions = [];
+                chosenShape = null;
+                currShape = null;
+                currentMode = MODES.None;
+                document.getElementById("opt-model-bt-rectangle").style.background = "#00ADB5";
+                document.getElementById("opt-model-bt-rectangle").style.color = "#222831";
             }
         }
         else if(chosenShape == "polygon"){
@@ -532,6 +590,62 @@ document.getElementById("input-square").addEventListener("change", (e) => {
 
         // Move the third vertex
         selectedShape.moveVertex(2, x3, y3);
+    }
+    redraw();
+});
+document.getElementById("input-square").addEventListener("change", (e) => {
+    if (currentMode == MODES.None && selectedShape != null && selectedShape instanceof Square) {
+        let newLength = parseFloat(e.target.value) * Math.sqrt(2);
+        let oldLength = selectedShape.length();
+        
+        // Count new position of the third vertex
+        let x1 = selectedShape.vertices[0][0];
+        let y1 = selectedShape.vertices[0][1];
+        let oppVertex = selectedShape.getOppositeVertex(0);
+        let x2 = selectedShape.vertices[oppVertex][0];
+        let y2 = selectedShape.vertices[oppVertex][1];
+        let x3 = x1 + (x2 - x1) * newLength / oldLength;
+        let y3 = y1 + (y2 - y1) * newLength / oldLength;
+
+        // Move the third vertex
+        selectedShape.moveVertex(2, x3, y3);
+    }
+    redraw();
+});
+
+document.getElementById("input-rect-length").addEventListener("change", (e) => {
+    if (currentMode == MODES.None && selectedShape != null && selectedShape instanceof Rectangle) {
+        let newLength = parseFloat(e.target.value) * Math.sqrt(2);
+        let oldLength = selectedShape.length();
+        console.log("ada")
+        // Count new position of the third vertex
+        let x1 = selectedShape.vertices[0][0];
+        let y1 = selectedShape.vertices[0][1];
+        let x2 = selectedShape.vertices[3][0];
+        let y2 = selectedShape.vertices[3][1];
+        let x3 = x1 + (x2 - x1) * newLength / oldLength;
+        let y3 = y1 + (y2 - y1) * newLength / oldLength;
+
+        // Move the third vertex
+        selectedShape.moveVertex(3, x3, y3);
+    }
+    redraw();
+});
+document.getElementById("input-rect-width").addEventListener("change", (e) => {
+    if (currentMode == MODES.None && selectedShape != null && selectedShape instanceof Rectangle) {
+        let newLength = parseFloat(e.target.value) * Math.sqrt(2);
+        let oldLength = selectedShape.width();
+        
+        // Count new position of the third vertex
+        let x1 = selectedShape.vertices[0][0];
+        let y1 = selectedShape.vertices[0][1];
+        let x2 = selectedShape.vertices[1][0];
+        let y2 = selectedShape.vertices[1][1];
+        let x3 = x1 + (x2 - x1) * newLength / oldLength;
+        let y3 = y1 + (y2 - y1) * newLength / oldLength;
+
+        // Move the third vertex
+        selectedShape.moveVertex(1, x3, y3);
     }
     redraw();
 });

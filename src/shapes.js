@@ -207,7 +207,71 @@ class Rectangle extends Shape {
         super("rectangle", vertices, color);
     }
     draw() {
-        super.drawShape(gl.TRIANGLE_STRIP, this.vertices.length);
+        super.drawShape(gl.TRIANGLE_FAN, this.vertices.length);
+        this.center = [(this.vertices[0][0] + this.vertices[2][0]) / 2, (this.vertices[0][1] + this.vertices[2][1]) / 2];
+    }
+    getOppositeVertex(id) {
+        return (id + 2) % 4;
+    }
+    moveVertex(id, x, y) {
+        let oppVert = this.getOppositeVertex(id);
+        let verts = countRectangleVertices(this.vertices[oppVert][0], this.vertices[oppVert][1], x, y);
+        let x3 = verts[2][0]
+        let y3 = verts[2][1]
+        super.moveVertex(id, x3, y3)
+        if (id % 2 == 0) {
+            super.moveVertex((id + 1) % 4, x3, this.vertices[(id + 1) % 4][1])
+            super.moveVertex((id + 3) % 4, this.vertices[(id + 3) % 4][0], y3)
+        }
+        else {
+            super.moveVertex((id + 3) % 4, x3, this.vertices[(id + 3) % 4][1])
+            super.moveVertex((id + 1) % 4, this.vertices[(id + 1) % 4][0], y3)
+        }
+        this.center = [(this.vertices[0][0] + this.vertices[2][0]) / 2, (this.vertices[0][1] + this.vertices[2][1]) / 2];
+    }
+    move(x, y) {
+        let center_x = (this.vertices[0][0] + this.vertices[2][0]) / 2;
+        let center_y = (this.vertices[0][1] + this.vertices[2][1]) / 2;
+        let dx = x - center_x;
+        let dy = y - center_y;
+        super.move(dx, dy);
+        this.center = [x, y];
+    }
+    length() {
+        return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[3][0], this.vertices[3][1]);
+    }
+    width() {
+        return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[1][0], this.vertices[1][1]);
+    }
+    shear(id, x, y) {
+        let oppId = this.getOppositeVertex(id);
+        for (let i=0; i<this.vertices.length; i++) {
+            if (i != oppId) {
+                let dx = x - this.vertices[id][0];
+                let dy = y - this.vertices[id][1];
+                super.moveVertex(i, this.vertices[i][0] + dx, this.vertices[i][1] + dy);
+            }
+        }
+    }
+    colorVertex(id, r, g, b) {
+        super.color(id, r, g, b);
+    }
+    colorAll(r, g, b) {
+        super.colorAll(r, g, b);
+    }
+    dilate(x, y) {
+        let scale = countDistancePoints(x, y, this.center[0], this.center[1]) / countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.center[0], this.center[1]);
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * scale;
+            this.vertices[i][1] = this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
+        }
+    }
+    rotate(x, y) {
+        let angle = Math.atan2(y - this.center[1], x - this.center[0]) - Math.atan2(this.vertices[0][1] - this.center[1], this.vertices[0][0] - this.center[0]);
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * Math.cos(angle) - (this.vertices[i][1] - this.center[1]) * Math.sin(angle);
+            this.vertices[i][1] = this.center[1] + (this.vertices[i][0] - this.center[0]) * Math.sin(angle) + (this.vertices[i][1] - this.center[1]) * Math.cos(angle);
+        }
     }
 }
 

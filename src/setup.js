@@ -13,6 +13,7 @@ var vao;
 
 var lineShapes = [];
 var squareShapes = [];
+var rectangleShapes = [];
 var polygonShapes = [];
 var chosenShape = null;
 var x = 0;
