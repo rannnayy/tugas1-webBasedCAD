@@ -5,8 +5,8 @@ function getMousePos(e) {
 }
 
 function countDistancePoints(x1, y1, x2, y2) {
-    console.log("x1: ", x1, " y1: ", y1, " x2: ", x2, " y2: ", y2);
-    console.log(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    // console.log("x1: ", x1, " y1: ", y1, " x2: ", x2, " y2: ", y2);
+    // console.log(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 
@@ -37,4 +37,12 @@ function countSquareVertices(x1, y1, x3, y3) {
 function getBoundingCoordinates(x, y) {
     let d = 0.01;
     return [[x-d, y+d], [x+d, y+d], [x+d, y-d], [x-d, y-d]];
+}
+
+function getColor() {
+    var div = document.getElementById("color");
+    const color = div.value;
+    redColor = parseInt(color.substr(1,2), 16)/255;
+    greenColor = parseInt(color.substr(3,2), 16)/255;
+    blueColor = parseInt(color.substr(5,2), 16)/255;
 }

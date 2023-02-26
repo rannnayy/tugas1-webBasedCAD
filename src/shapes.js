@@ -3,8 +3,19 @@ class Shape {
     constructor(type, vertices, color) {
         this.type = type;
         this.vertices = vertices;
-        this.color = color;
         this.center = [];
+
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.color[i] = [color[0], color[1], color[2]];
+        }
+    }
+    color(id, r, g, b) {
+        this.color[id] = [r, g, b];
+    }
+    colorAll(r, g, b) {
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.color[i] = [r, g, b];
+        }
     }
     addVertex(x, y) {
         this.vertices.push([x, y]);
@@ -23,8 +34,8 @@ class Shape {
         for (let i = 0; i < this.vertices.length; i++) {
             vert.push(this.vertices[i][0])
             vert.push(this.vertices[i][1])
-            for (let j = 0; j < this.color.length; j++) {
-                vert.push(this.color[j])
+            for (let j = 0; j < this.color[i].length; j++) {
+                vert.push(this.color[i][j])
             }
         }
         // console.log(vert)
@@ -72,6 +83,12 @@ class Line extends Shape {
     }
     length() {
         return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[1][0], this.vertices[1][1]);
+    }
+    color(id, r, g, b) {
+        super.color(id, r, g, b);
+    }
+    colorAll(r, g, b) {
+        super.colorAll(r, g, b);
     }
 }
 
@@ -131,6 +148,12 @@ class Square extends Shape {
                 super.moveVertex(i, this.vertices[i][0] + dx, this.vertices[i][1] + dy);
             }
         }
+    }
+    color(id, r, g, b) {
+        super.color(id, r, g, b);
+    }
+    colorAll(r, g, b) {
+        super.colorAll(r, g, b);
     }
 }
 

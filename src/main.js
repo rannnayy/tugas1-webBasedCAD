@@ -14,7 +14,11 @@ function redraw() {
   polygonShapes.forEach(function (shape) {
     shape.draw();
   });
-  selectedPoint.draw();
+  try {
+    selectedPoint.draw();
+  } catch (error) {
+    console.log();
+}
 
   displayShapes();
 }
@@ -36,8 +40,6 @@ function displayShapes() {
       selectedShape = shape;
       selectedVertex = null;
       selectedVertexID = null;
-      selectedPoint = [];
-      selectedPoint.push(shape);
       redraw();
     });
     structurePanel.appendChild(btn);
@@ -51,8 +53,6 @@ function displayShapes() {
         selectedShape = shape;
         selectedVertex = vertex;
         selectedVertexID = id;
-        selectedPoint = [];
-        selectedPoint.push(shape);
         redraw();
       });
       structurePanel.appendChild(btn);
@@ -69,8 +69,6 @@ function displayShapes() {
       selectedShape = shape;
       selectedVertex = null;
       selectedVertexID = null;
-      selectedPoint = [];
-      selectedPoint.push(shape);
       redraw();
     });
     structurePanel.appendChild(btn);
@@ -84,8 +82,6 @@ function displayShapes() {
         selectedShape = shape;
         selectedVertex = vertex;
         selectedVertexID = id;
-        selectedPoint = [];
-        selectedPoint.push(shape);
         redraw();
       });
       structurePanel.appendChild(btn);
@@ -101,8 +97,6 @@ function displayShapes() {
       selectedShape = shape;
       selectedVertex = null;
       selectedVertexID = null;
-      selectedPoint = [];
-      selectedPoint.push(shape);
       redraw();
     });
     structurePanel.appendChild(btn);
@@ -116,8 +110,6 @@ function displayShapes() {
         selectedShape = shape;
         selectedVertex = vertex;
         selectedVertexID = id;
-        selectedPoint = [];
-        selectedPoint.push(shape);
         redraw();
       });
       structurePanel.appendChild(btn);

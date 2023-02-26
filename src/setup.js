@@ -19,6 +19,10 @@ var x = 0;
 var y = 0;
 var currShape = null;
 
+var redColor = null;
+var greenColor = null;
+var blueColor = null;
+
 var selectedShape = null;
 var selectedVertex = null;
 var selectedVertexID = null;
@@ -33,6 +37,11 @@ var shearedVertexID = null;
 var shearedPoint = null;
 var shearedDistance = Infinity;
 
+var coloredShape = null;
+var coloredVertex = null;
+var coloredVertexID = null;
+var coloredPoint = null;
+
 var model = "";
 var positions = [];
 
@@ -43,7 +52,8 @@ const MODES = {
     Translate: Symbol("Translate"),
     Dilate: Symbol("Dilate"),
     Rotate: Symbol("Rotate"),
-    Shear: Symbol("Shear"),
+    Selecting: Symbol("Selecting"),
+    Color: Symbol("Color")
 }
 
 var currentMode = MODES.None;

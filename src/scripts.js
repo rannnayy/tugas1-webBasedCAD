@@ -109,6 +109,14 @@ function chosenModel(model) {
 
 function chosenTransformation(state) {
     switch (state) {
+        case "Color":
+            document.getElementById("opt-color-bt").style.background = "#222831";
+            document.getElementById("opt-color-bt").style.color = "#FFFFFF";
+
+            getColor();
+            currentMode = MODES.Color;
+
+            break;
         case "Translate":
             document.getElementById("opt-trans-bt-translation").style.background = "#222831";
             document.getElementById("opt-trans-bt-translation").style.color = "#FFFFFF";
@@ -243,7 +251,7 @@ canvas.addEventListener("mousemove", (e) => {
                 positions.pop();
             }
             positions.push([x, y]);
-            currShape = new Line(positions, [1.0, 0.0, 0.0]);
+            currShape = new Line(positions, [redColor, greenColor, blueColor]);
             lineShapes.push(currShape);
             document.getElementById("input-line").value = currShape.length();
         }
@@ -255,19 +263,17 @@ canvas.addEventListener("mousemove", (e) => {
                 positions.pop();
             }
             positions = countSquareVertices(positions[0][0], positions[0][1], x, y);
-            currShape = new Square(positions, [1.0, 0.0, 0.0]);
+            currShape = new Square(positions, [redColor, greenColor, blueColor]);
             squareShapes.push(currShape);
             document.getElementById("input-square").value = currShape.length();
         }
     }
-    else if (currentMode == MODES.None && chosenShape == null) {
+    else if (currentMode == MODES.None && currShape == null) {
         getNearestVertex();
         
         // console.log("nearest point is ", selectedVertex, " with distance ", selectedDistance)
-        if (selectedDistance < 1.0) {
-            let pointPosition = getBoundingCoordinates(selectedVertex[0], selectedVertex[1]);
-            selectedPoint = new Square(pointPosition, [0.0, 1.0, 0.0])
-        }
+        let pointPosition = getBoundingCoordinates(selectedVertex[0], selectedVertex[1]);
+        selectedPoint = new Square(pointPosition, [0.0, 0.0, 0.0]);
     }
     else if (currentMode == MODES.Moving) {
         selectedPoint.move(x, y);
@@ -288,10 +294,6 @@ canvas.addEventListener("mousemove", (e) => {
 
         document.body.style.cursor = "grabbing";
     }
-    else if (currentMode = MODES.Shear) {
-        selectedPoint.move(x, y);
-        shearedShape.shear(shearedVertexID, x, y);
-    }
     redraw();
 });
 
@@ -309,7 +311,8 @@ canvas.addEventListener("click", (e) => {
                     positions.pop();
                 }
                 positions.push([x, y]);
-                currShape = new Line(positions, [1.0, 0.0, 0.0]);
+                getColor();
+                currShape = new Line(positions, [redColor, greenColor, blueColor]);
                 lineShapes.pop();
                 lineShapes.push(currShape);
                 document.getElementById("input-line").value = currShape.length();
@@ -329,7 +332,8 @@ canvas.addEventListener("click", (e) => {
                     positions.pop();
                 }
                 positions = countSquareVertices(positions[0][0], positions[0][1], x, y);
-                currShape = new Square(positions, [1.0, 0.0, 0.0]);
+                getColor();
+                currShape = new Square(positions, [redColor, greenColor, blueColor]);
                 squareShapes.pop();
                 squareShapes.push(currShape);
                 document.getElementById("input-square").value = currShape.length();
@@ -368,7 +372,7 @@ canvas.addEventListener("click", (e) => {
         getNearestObject();
 
         let pointPosition = getBoundingCoordinates(grabbedPoint[0], grabbedPoint[1]);
-        selectedPoint = new Square(pointPosition, [0.0, 1.0, 0.0])
+        selectedPoint = new Square(pointPosition, [0.0, 0.0, 1.0])
 
         // Move A Shape
         selectedPoint.move(x, y);
@@ -387,27 +391,37 @@ canvas.addEventListener("click", (e) => {
         document.getElementById("opt-trans-bt-translation").style.background = "#00ADB5";
         document.getElementById("opt-trans-bt-translation").style.color = "#222831";
     }
-    else if (currentMode == MODES.Shear && shearedShape == null) {
-        getNearestShear();
+    else if (currentMode == MODES.Color && coloredShape == null) {
+        getNearestVertex();
+        let dist = selectedDistance;
+        coloredShape = selectedShape;
+        coloredVertex = selectedVertex;
+        coloredVertexID = selectedVertexID;
+        coloredPoint = selectedPoint;
 
-        if (shearedDistance < shearedShape.length()) {
-            let pointPosition = getBoundingCoordinates(shearedPoint[0], shearedPoint[1]);
-            selectedPoint = new Square(pointPosition, [0.0, 1.0, 0.0])
+        getNearestObject();
+        if (selectedDistance < dist) {
+            coloredShape = selectedShape;
+            coloredVertex = null;
+            coloredVertexID = null;
+            coloredPoint = null;
+
+            // Color the Shape
+            coloredShape.colorAll(redColor, greenColor, blueColor);
         }
-
-        selectedPoint.move(x, y);
-        shearedShape.shear(shearedVertexID, x, y);
-    }
-    else if (currentMode = MODES.Shear && shearedShape != null) {
-        selectedPoint.move(x, y);
-        shearedShape.shear(shearedVertexID, x, y);
+        else {
+            // Color the Vertex
+            coloredShape.color(coloredVertexID, redColor, greenColor, blueColor);
+        }
+        
         currentMode = MODES.None;
-        shearedPoint = null;
-        shearedShape = null;
-        shearedVertexID = null;
+        selectedShape = null;
+        selectedVertex = null;
+        selectedVertexID = null;
+        selectedPoint = null;
 
-        document.getElementById("opt-trans-bt-shear").style.background = "#00ADB5";
-        document.getElementById("opt-trans-bt-shear").style.color = "#222831";
+        document.getElementById("opt-color-bt").style.background = "#00ADB5";
+        document.getElementById("opt-color-bt").style.color = "#222831";
     }
     redraw();
 });

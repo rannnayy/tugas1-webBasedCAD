@@ -69,7 +69,8 @@ html {
 }
 
 .opt-model-bt,
-.opt-trans-bt {
+.opt-trans-bt,
+.opt-color-in {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -77,7 +78,6 @@ html {
   justify-content: center;
 }
 
-.opt-color-in,
 .opt-file-in {
   display: flex;
   flex-direction: column;
