@@ -14,14 +14,21 @@ function getMostLeftAndRight(list) {
   return [left, right];
 }
 
-function isVertexSame(v1, v2) {
-  return v1[0] == v2[0] && v1[1] == v2[1];
+function isVertexNotInList(v1, list) {
+  let bool = true
+  for(item of list){
+    if(item[0] == v1[0] && item[1] == v1[1]){
+      bool = false
+      break
+    }
+  }
+  return bool
 }
 
 function SortVertices(list) {
-  let temp = [list[0]];
-  let currVertex = list[0];
-  let lastVertex = [-99, -99];
+  let [a,_] = getMostLeftAndRight(list)
+  let temp = [a];
+  let currVertex = a;
 
   while (temp.length < list.length) {
     let nearestDistance = 100;
@@ -31,8 +38,7 @@ function SortVertices(list) {
       let tempDistance =
         (vertex[0] - currVertex[0]) ** 2 + (vertex[1] - currVertex[1]) ** 2;
       if (
-        !isVertexSame(vertex, currVertex) &&
-        !isVertexSame(vertex, lastVertex) &&
+        isVertexNotInList(vertex, temp) &&
         tempDistance < nearestDistance
       ) {
         nearestDistance = tempDistance;
@@ -108,6 +114,9 @@ function OuterPoint(p1, p2, s) {
 }
 
 function DAndC(p1, p2, s) {
+  console.log("p1", p1);
+  console.log("p2", p2);
+  console.log("s", s);
   let hull = [];
   if (s.length == 0) {
     hull = [p1, p2];
@@ -162,17 +171,48 @@ function ConvexHull(bucket) {
     }
   });
 
+  console.log("p1", p1);
+  console.log("pn", pn);
+  console.log("s1", s1);
+  console.log("s2", s2);
+
   let hull1 = DAndC(p1, pn, s1);
   let hull2 = DAndC(pn, p1, s2);
+
+  console.log("hull1", hull1);
+  console.log("hull2", hull2);
 
   hull2.forEach(function (point) {
     hull1.push(point);
   });
 
-  let resultBucket = [];
-  getUnique(hull1).forEach(function (item) {
-    resultBucket.push([item[0] / 100, item[1] / 100]);
+  console.log("hull1", getUnique(hull1));
+
+  let resultBucket = getUnique(hull1);
+  resultBucket.forEach(function (item) {
+    item[0] /= 100
+    item[1] /= 100
   });
 
   return SortVertices(resultBucket);
 }
+
+
+a = [
+  [-0.5224719101123596, 0.8670411985018727],
+  [-0.8520599250936329, 0.6385767790262172],
+  [-0.8445692883895132, 0.2752808988764045],
+  [0.3295880149812734, 0.028089887640449437],
+  [0.9812734082397003, 0.5880149812734082],
+  [0.47752808988764045, 0.9438202247191011],
+];
+
+b = [
+  [-0.7153558052434457, 0.8651685393258427],
+  [-0.7734082397003745, 0.5936329588014981],
+  [0.020599250936329586, 0.8876404494382022],
+  [0.6404494382022472, 0.7434456928838952],
+  [0.6797752808988764, 0.24344569288389514],
+];
+
+console.log(ConvexHull(b))
