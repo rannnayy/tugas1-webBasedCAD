@@ -544,12 +544,22 @@ document.getElementsByClassName("opt-file-load")[0].addEventListener("click", (e
         let fr = new FileReader();
         fr.readAsText(file);
         fr.onload = function () {
-        let tempShape = fr.result.split("\r\n");
-        if (tempShape[0] == "polygon") {
-            polygonShapes.push(
-            new Polygon(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
-            );
-        }
+            let tempShape = fr.result.split("\r\n");
+            if (tempShape[0] == "polygon") {
+                polygonShapes.push(
+                new Polygon(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
+                );
+            }
+            else if (tempShape[0] == "line") {
+                lineShapes.push(
+                new Line(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
+                );
+            }
+            else if (tempShape[0] == "square") {
+                squareShapes.push(
+                new Square(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
+                );
+            }
         };
         redraw();
     }
@@ -566,6 +576,3 @@ document.getElementsByClassName("opt-file-save")[0].addEventListener("click", (e
     
     document.body.removeChild(saveFile);
 });
-
-
-

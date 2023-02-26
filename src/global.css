@@ -42,6 +42,11 @@ html {
   row-gap: 2vh;
 }
 
+.opt-shapes {
+    overflow: auto;
+    height: 90vh;
+}
+
 .opt-model,
 .opt-transformation,
 .opt-color,
