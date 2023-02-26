@@ -431,6 +431,22 @@ canvas.addEventListener("click", (e) => {
         document.getElementById("opt-trans-bt-rotation").style.background = "#00ADB5";
         document.getElementById("opt-trans-bt-rotation").style.color = "#222831";
     }
+    else if (currentMode == MODES.Shear && shearedShape == null) {
+        [shearedShape, shearedVertex, _] = getNearestObject();
+
+        selectedPoint = new Point(shearedVertex)
+
+        // Move A Shape
+        selectedPoint.move(x, y);
+        shearedShape.shear(x, y);
+        currentMode = MODES.None;
+        shearedShape = null;
+        shearedVertex = null;
+        
+        document.body.style.cursor = "default";
+        document.getElementById("opt-trans-bt-shear").style.background = "#00ADB5";
+        document.getElementById("opt-trans-bt-shear").style.color = "#222831";
+    }
     else if (currentMode == MODES.Color && coloredShape == null) {
         [coloredShape, coloredVertex, coloredVertexID, dist] = getNearestVertex();
         let [coloredShapeObj, _, distobj] = getNearestObject();

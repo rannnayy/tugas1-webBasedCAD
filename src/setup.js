@@ -32,11 +32,6 @@ var selectedDistance = Infinity;
 var grabbedShape = null;
 var grabbedPoint = null;
 
-var shearedShape = null;
-var shearedVertexID = null;
-var shearedPoint = null;
-var shearedDistance = Infinity;
-
 var coloredShape = null;
 var coloredVertex = null;
 var coloredVertexID = null;
@@ -47,6 +42,9 @@ var dilatedVertex = null;
 
 var rotatedShape = null;
 var rotatedVertex = null;
+
+var shearedShape = null;
+var shearedVertex = null;
 
 var model = "";
 var positions = [];

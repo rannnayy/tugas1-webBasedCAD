@@ -105,6 +105,14 @@ class Line extends Shape {
             this.vertices[i][1] = this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
         }
     }
+    shear(x, y) {
+        let shx = (x - this.center[0]) / (this.length());
+        let shy = (y - this.center[1]) / (this.length());
+        for (let i=0; i<this.vertices.length; i++) {
+            this.vertices[i][0] = this.vertices[i][0] + (this.vertices[i][1] - this.center[1]) * shx;
+            this.vertices[i][1] = this.vertices[i][1] + (this.vertices[i][0] - this.center[0]) * shy;
+        }
+    }
     rotate(x, y) {
         let angle = Math.atan2(y - this.center[1], x - this.center[0]) - Math.atan2(this.vertices[0][1] - this.center[1], this.vertices[0][0] - this.center[0]);
         
@@ -163,14 +171,12 @@ class Square extends Shape {
     length() {
         return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[1][0], this.vertices[1][1]);
     }
-    shear(id, x, y) {
-        let oppId = this.getOppositeVertex(id);
+    shear(x, y) {
+        let shx = (x - this.center[0]) / (this.length());
+        let shy = (y - this.center[1]) / (this.length());
         for (let i=0; i<this.vertices.length; i++) {
-            if (i != oppId) {
-                let dx = x - this.vertices[id][0];
-                let dy = y - this.vertices[id][1];
-                super.moveVertex(i, this.vertices[i][0] + dx, this.vertices[i][1] + dy);
-            }
+            this.vertices[i][0] = this.vertices[i][0] + (this.vertices[i][1] - this.center[1]) * shx;
+            this.vertices[i][1] = this.vertices[i][1] + (this.vertices[i][0] - this.center[0]) * shy;
         }
     }
     colorVertex(id, r, g, b) {
