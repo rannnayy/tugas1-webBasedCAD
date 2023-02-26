@@ -149,96 +149,81 @@ function chosenTransformation(state) {
 }
 
 function getNearestVertex() {
-    selectedDistance = 1000.0;
+    let in_selectedShape = null;
+    let in_selectedVertex = null;
+    let in_selectedVertexID = null;
+    let in_selectedDistance = Infinity;
+    
     for (let j = 0; j < lineShapes.length; j++) {
         for (let i = 0; i < lineShapes[j].vertices.length; i++) {
             let tempDistance = countDistancePoints(x, y, lineShapes[j].vertices[i][0], lineShapes[j].vertices[i][1]);
-            if (tempDistance < selectedDistance) {
-                selectedDistance = tempDistance;
-                selectedShape = lineShapes[j];
-                selectedVertex = lineShapes[j].vertices[i];
-                selectedVertexID = i;
+            if (tempDistance < in_selectedDistance) {
+                in_selectedDistance = tempDistance;
+                in_selectedShape = lineShapes[j];
+                in_selectedVertex = lineShapes[j].vertices[i];
+                in_selectedVertexID = i;
             }
         }
     }
     for (let j = 0; j < squareShapes.length; j++) {
         for (let i = 0; i < squareShapes[j].vertices.length; i++) {
             let tempDistance = countDistancePoints(x, y, squareShapes[j].vertices[i][0], squareShapes[j].vertices[i][1]);
-            if (tempDistance < selectedDistance) {
-                selectedDistance = tempDistance;
-                selectedShape = squareShapes[j];
-                selectedVertex = squareShapes[j].vertices[i];
-                selectedVertexID = i;
+            if (tempDistance < in_selectedDistance) {
+                in_selectedDistance = tempDistance;
+                in_selectedShape = squareShapes[j];
+                in_selectedVertex = squareShapes[j].vertices[i];
+                in_selectedVertexID = i;
             }
         }
     }
     for (let j = 0; j < polygonShapes.length; j++) {
         for (let i = 0; i < polygonShapes[j].vertices.length; i++) {
             let tempDistance = countDistancePoints(x, y, polygonShapes[j].vertices[i][0], polygonShapes[j].vertices[i][1]);
-            if (tempDistance < selectedDistance) {
-                selectedDistance = tempDistance;
-                selectedShape = polygonShapes[j];
-                selectedVertex = polygonShapes[j].vertices[i];
-                selectedVertexID = i;
+            if (tempDistance < in_selectedDistance) {
+                in_selectedDistance = tempDistance;
+                in_selectedShape = polygonShapes[j];
+                in_selectedVertex = polygonShapes[j].vertices[i];
+                in_selectedVertexID = i;
             }
         }
     }
     document.body.style.cursor = "move";
-}
 
-function getNearestShear() {
-    shearedDistance = 1000.0;
-    for (let j = 0; j < lineShapes.length; j++) {
-        for (let i = 0; i < lineShapes[j].vertices.length; i++) {
-            let tempDistance = countDistancePoints(x, y, lineShapes[j].vertices[i][0], lineShapes[j].vertices[i][1]);
-            if (tempDistance < shearedDistance) {
-                shearedDistance = tempDistance;
-                shearedShape = lineShapes[j];
-                shearedPoint = lineShapes[j].vertices[i];
-                shearedVertexID = i;
-            }
-        }
-    }
-    for (let j = 0; j < squareShapes.length; j++) {
-        for (let i = 0; i < squareShapes[j].vertices.length; i++) {
-            let tempDistance = countDistancePoints(x, y, squareShapes[j].vertices[i][0], squareShapes[j].vertices[i][1]);
-            if (tempDistance < shearedDistance) {
-                shearedDistance = tempDistance;
-                shearedShape = squareShapes[j];
-                shearedPoint = squareShapes[j].vertices[i];
-                shearedVertexID = i;
-            }
-        }
-    }
+    return [in_selectedShape, in_selectedVertex, in_selectedVertexID, in_selectedDistance]
 }
 
 function getNearestObject() {
-    selectedDistance = 1000.0;
+    let in_grabbedShape = null;
+    let in_grabbedPoint = null;
+    let in_selectedDistance = Infinity;
+    
     for (let j = 0; j < lineShapes.length; j++) {
         let tempDistance = countDistancePoints(x, y, lineShapes[j].center[0], lineShapes[j].center[1]);
-        if (tempDistance < selectedDistance) {
-            selectedDistance = tempDistance;
-            grabbedShape = lineShapes[j];
-            grabbedPoint = lineShapes[j].center;
+        if (tempDistance < in_selectedDistance) {
+            in_selectedDistance = tempDistance;
+            in_grabbedShape = lineShapes[j];
+            in_grabbedPoint = lineShapes[j].center;
         }
     }
     for (let j = 0; j < squareShapes.length; j++) {
         let tempDistance = countDistancePoints(x, y, squareShapes[j].center[0], squareShapes[j].center[1]);
-        if (tempDistance < selectedDistance) {
-            selectedDistance = tempDistance;
-            grabbedShape = squareShapes[j];
-            grabbedPoint = squareShapes[j].center;
+        if (tempDistance < in_selectedDistance) {
+            in_selectedDistance = tempDistance;
+            in_grabbedShape = squareShapes[j];
+            in_grabbedPoint = squareShapes[j].center;
         }
     }
     for (let j = 0; j < polygonShapes.length; j++) {
         let tempDistance = countDistancePoints(x, y, polygonShapes[j].center[0], polygonShapes[j].center[1]);
-        if (tempDistance < selectedDistance) {
-            selectedDistance = tempDistance;
-            grabbedShape = polygonShapes[j];
-            grabbedPoint = polygonShapes[j].center;
+        if (tempDistance < in_selectedDistance) {
+            in_selectedDistance = tempDistance;
+            in_grabbedShape = polygonShapes[j];
+            in_grabbedPoint = polygonShapes[j].center;
         }
     }
     document.body.style.cursor = "grab";
+
+    return [in_grabbedShape, in_grabbedPoint, in_selectedDistance]
 }
 
 canvas.addEventListener("mousemove", (e) => {
@@ -271,7 +256,7 @@ canvas.addEventListener("mousemove", (e) => {
         }
     }
     else if (currentMode == MODES.None && currShape == null) {
-        getNearestVertex();
+        [selectedShape, selectedVertex, selectedVertexID, selectedDistance] = getNearestVertex();
         
         selectedPoint = new Point(selectedVertex);
     }
@@ -291,6 +276,12 @@ canvas.addEventListener("mousemove", (e) => {
     else if (currentMode == MODES.Translate) {
         selectedPoint.move(x, y);
         grabbedShape.move(x, y);
+
+        document.body.style.cursor = "grabbing";
+    }
+    else if (currentMode == MODES.Dilate) {
+        selectedPoint.move(x, y);
+        dilatedShape.dilate(x, y);
 
         document.body.style.cursor = "grabbing";
     }
@@ -369,7 +360,7 @@ canvas.addEventListener("click", (e) => {
         document.body.style.cursor = "default";
     }
     else if (currentMode == MODES.Translate && grabbedShape == null) {
-        getNearestObject();
+        [grabbedShape, grabbedPoint, _] = getNearestObject();
 
         selectedPoint = new Point(grabbedPoint)
 
@@ -390,18 +381,36 @@ canvas.addEventListener("click", (e) => {
         document.getElementById("opt-trans-bt-translation").style.background = "#00ADB5";
         document.getElementById("opt-trans-bt-translation").style.color = "#222831";
     }
-    else if (currentMode == MODES.Color && coloredShape == null) {
-        getNearestVertex();
-        let dist = selectedDistance.valueOf();
-        coloredShape = selectedShape;
-        coloredVertex = selectedVertex;
-        coloredVertexID = selectedVertexID;
-        coloredPoint = selectedPoint;
+    else if (currentMode == MODES.Dilate && dilatedShape == null) {
+        [dilatedShape, dilatedVertex, _, _] = getNearestVertex();
 
-        getNearestObject();
-        console.log(selectedDistance, dist);
-        if (selectedDistance < dist) {
-            coloredShape = selectedShape;
+        selectedPoint = new Point(dilatedVertex)
+
+        // Move A Shape
+        selectedPoint.move(x, y);
+        dilatedShape.dilate(x, y);
+        
+        document.body.style.cursor = "grabbing";
+    }
+    else if (currentMode == MODES.Dilate && dilatedShape != null) {
+        selectedPoint.move(x, y);
+        dilatedShape.dilate(x, y);
+        currentMode = MODES.None;
+        dilatedShape = null;
+        dilatedVertex = null;
+        
+        document.body.style.cursor = "default";
+        document.getElementById("opt-trans-bt-dilatation").style.background = "#00ADB5";
+        document.getElementById("opt-trans-bt-dilatation").style.color = "#222831";
+    }
+    else if (currentMode == MODES.Color && coloredShape == null) {
+        [coloredShape, coloredVertex, coloredVertexID, dist] = getNearestVertex();
+        let [coloredShapeObj, _, distobj] = getNearestObject();
+
+        console.log(distobj, dist);
+
+        if (distobj < dist) {
+            coloredShape = coloredShapeObj;
             coloredVertex = null;
             coloredVertexID = null;
             coloredPoint = null;
@@ -415,11 +424,10 @@ canvas.addEventListener("click", (e) => {
         }
         
         currentMode = MODES.None;
-        selectedShape = null;
-        selectedVertex = null;
-        selectedVertexID = null;
-        selectedPoint = null;
         coloredShape = null;
+        coloredVertex = null;
+        coloredVertexID = null;
+        coloredPoint = null;
 
         document.getElementById("opt-color-bt").style.background = "#00ADB5";
         document.getElementById("opt-color-bt").style.color = "#222831";

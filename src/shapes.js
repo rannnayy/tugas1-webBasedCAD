@@ -98,6 +98,13 @@ class Line extends Shape {
     colorAll(r, g, b) {
         super.colorAll(r, g, b);
     }
+    dilate(x, y) {
+        let scale = countDistancePoints(x, y, this.center[0], this.center[1]) / countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.center[0], this.center[1]);
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * scale;
+            this.vertices[i][1] = this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
+        }
+    }
 }
 
 class Triangle extends Shape {
@@ -162,6 +169,13 @@ class Square extends Shape {
     }
     colorAll(r, g, b) {
         super.colorAll(r, g, b);
+    }
+    dilate(x, y) {
+        let scale = countDistancePoints(x, y, this.center[0], this.center[1]) / countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.center[0], this.center[1]);
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * scale;
+            this.vertices[i][1] = this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
+        }
     }
 }
 

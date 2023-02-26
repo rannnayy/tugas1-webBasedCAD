@@ -42,6 +42,10 @@ var coloredVertex = null;
 var coloredVertexID = null;
 var coloredPoint = null;
 
+var dilatedShape = null;
+var dilatedVertex = null;
+var dilatedVertexID = null;
+
 var model = "";
 var positions = [];
 
