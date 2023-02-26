@@ -312,6 +312,10 @@ canvas.addEventListener("mousemove", (e) => {
         else if (selectedShape instanceof Square) {
             document.getElementById("input-square").value = selectedShape.length();
         }
+        else if (selectedShape instanceof Rectangle) {
+            document.getElementById("input-rect-length").value = selectedShape.length();
+            document.getElementById("input-rect-width").value = selectedShape.width();
+        }
     }
     else if (currentMode == MODES.Translate) {
         selectedPoint.move(x, y);

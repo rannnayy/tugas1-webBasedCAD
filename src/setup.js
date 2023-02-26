@@ -62,7 +62,7 @@ const MODES = {
     Translate: Symbol("Translate"),
     Dilate: Symbol("Dilate"),
     Rotate: Symbol("Rotate"),
-    Selecting: Symbol("Selecting"),
+    Shear: Symbol("Shear"),
     Color: Symbol("Color"),
     PolygonAdd:  Symbol("Polygon_add"),
     PolygonDelete: Symbol("Polygon_del")

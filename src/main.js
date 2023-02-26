@@ -61,7 +61,7 @@ function displayShapes() {
     btn.innerHTML = shape.type;
     btn.setAttribute("class", "btn-shape");
     btn.addEventListener("click", function () {
-      currentMode = MODES.Selecting;
+      currentMode = MODES.None;
       selectedShape = shape;
       selectedVertex = null;
       selectedVertexID = null;
@@ -74,7 +74,7 @@ function displayShapes() {
       btn.innerHTML = "Vertex " + id;
       btn.setAttribute("class", "btn-vertex");
       btn.addEventListener("click", function () {
-        currentMode = MODES.Selecting;
+        currentMode = MODES.None;
         selectedShape = shape;
         selectedVertex = vertex;
         selectedVertexID = id;
@@ -90,7 +90,7 @@ function displayShapes() {
     btn.setAttribute("class", "btn-shape");
     btn.innerHTML = shape.type;
     btn.addEventListener("click", function () {
-      currentMode = MODES.Selecting;
+      currentMode = MODES.None;
       selectedShape = shape;
       selectedVertex = null;
       selectedVertexID = null;
@@ -103,7 +103,7 @@ function displayShapes() {
       btn.setAttribute("class", "btn-vertex");
       btn.innerHTML = "Vertex " + id;
       btn.addEventListener("click", function () {
-        currentMode = MODES.Selecting;
+        currentMode = MODES.None;
         selectedShape = shape;
         selectedVertex = vertex;
         selectedVertexID = id;
@@ -118,7 +118,7 @@ function displayShapes() {
     btn.setAttribute("class", "btn-shape");
     btn.innerHTML = shape.type;
     btn.addEventListener("click", function () {
-      currentMode = MODES.Selecting;
+      currentMode = MODES.None;
       selectedShape = shape;
       selectedVertex = null;
       selectedVertexID = null;
@@ -131,7 +131,7 @@ function displayShapes() {
       btn.setAttribute("class", "btn-vertex");
       btn.innerHTML = "Vertex " + id;
       btn.addEventListener("click", function () {
-        currentMode = MODES.Selecting;
+        currentMode = MODES.None;
         selectedShape = shape;
         selectedVertex = vertex;
         selectedVertexID = id;
@@ -146,7 +146,7 @@ function displayShapes() {
     btn.setAttribute("class", "btn-shape");
     btn.innerHTML = shape.type;
     btn.addEventListener("click", function () {
-      currentMode = MODES.Selecting;
+      currentMode = MODES.None;
       selectedShape = shape;
       selectedVertex = null;
       selectedVertexID = null;
@@ -159,7 +159,7 @@ function displayShapes() {
       btn.setAttribute("class", "btn-vertex");
       btn.innerHTML = "Vertex " + id;
       btn.addEventListener("click", function () {
-        currentMode = MODES.Selecting;
+        currentMode = MODES.None;
         selectedShape = shape;
         selectedVertex = vertex;
         selectedVertexID = id;
