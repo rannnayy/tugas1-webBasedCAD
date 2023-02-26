@@ -2,6 +2,7 @@
 
 getColor();
 
+
 function chosenModel(model) {
     if (model == "line") {
         document.getElementById("opt-model-bt-line").style.background = "#222831";
@@ -734,3 +735,15 @@ document.getElementById("add-vertex").addEventListener("click", (e) => {
 
   currentMode = MODES.PolygonAdd;
 });
+
+function turnAnimation() {
+    if (animationActive) {
+        animationActive = false;
+        
+    }
+    else {
+        animationActive = true;
+        setup();
+    }
+    redraw();
+}

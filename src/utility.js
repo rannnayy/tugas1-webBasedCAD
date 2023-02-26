@@ -68,3 +68,4 @@ function syncColorVertex(listVertexOld, listVertexNew, listColor) {
 
   return temp;
 }
+

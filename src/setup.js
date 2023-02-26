@@ -19,6 +19,7 @@ var chosenShape = null;
 var x = 0;
 var y = 0;
 var currShape = null;
+var xRotate = -1;
 
 var redColor = null;
 var greenColor = null;
@@ -49,6 +50,8 @@ var shearedVertex = null;
 
 var addedVertexShape = null;
 
+var animationActive = false;
+
 var model = "";
 var positions = [];
 
@@ -64,6 +67,7 @@ const MODES = {
     PolygonAdd:  Symbol("Polygon_add"),
     PolygonDelete: Symbol("Polygon_del")
 }
+
 
 var currentMode = MODES.None;
 
@@ -113,6 +117,22 @@ function resizeCanvasToDisplaySize(canvas, multiplier) {
     }
     return false;
 }
+
+window.requestAnimFrame = (function () {
+    // request Animation Frame
+      return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          window.oRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function (callback, element) {
+              window.setTimeout(callback, 1000);
+          };
+  })();
+
+
+
+setup();
 
 function setup() {
     // Set canvas size and viewport
@@ -175,7 +195,16 @@ function setup() {
 
     gl.clearColor(238, 238, 238, 1) // light background color
     gl.clear(gl.COLOR_BUFFER_BIT)   // clear the screen
+    
     // gl.drawArrays(gl.LINE_STRIP, 0, positions.length / 2)  // draw 1 point
+    if (animationActive) {
+        if (xRotate == 1) {
+            xRotate == -1
+        }
+        xRotate += 0.1
+        redrawRotateAnimation(xRotate,0),
+        window.requestAnimFrame(setup);
+    }
+    
 }
 
-setup();

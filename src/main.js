@@ -25,6 +25,28 @@ function redraw() {
 
   displayShapes();
 }
+function redrawRotateAnimation(x,y) {
+
+  gl.clearColor(238, 238, 238, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  lineShapes.forEach(function (shape) {
+    shape.rotate(x,y)
+    shape.draw();
+  });
+  squareShapes.forEach(function (shape) {
+    shape.rotate(x,y)
+    shape.draw();
+  });
+  rectangleShapes.forEach(function (shape) {
+    shape.rotate(x,y)
+    shape.draw();
+  });
+  polygonShapes.forEach(function (shape) {
+    shape.rotate(x,y)
+    shape.draw(); 
+  });
+}
 
 // Display shapes on left panel
 function displayShapes() {
