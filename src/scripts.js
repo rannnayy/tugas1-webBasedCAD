@@ -418,6 +418,7 @@ canvas.addEventListener("click", (e) => {
         selectedVertex = null;
         selectedVertexID = null;
         selectedPoint = null;
+        coloredShape = null;
 
         document.getElementById("opt-color-bt").style.background = "#00ADB5";
         document.getElementById("opt-color-bt").style.color = "#222831";

@@ -5,9 +5,12 @@ class Shape {
         this.vertices = vertices;
         this.center = [];
 
+        let temp = []
         for (let i = 0; i < this.vertices.length; i++) {
-            this.color[i] = [color[0], color[1], color[2]];
+            temp[i] = [color[0], color[1], color[2]];
         }
+        this.color = temp
+        console.log(this.color)
     }
     color(id, r, g, b) {
         this.color[id] = [r, g, b];
