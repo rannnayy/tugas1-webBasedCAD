@@ -51,3 +51,20 @@ function getColor() {
     greenColor = parseInt(color.substr(3,2), 16)/255;
     blueColor = parseInt(color.substr(5,2), 16)/255;
 }
+
+function syncColorVertex(listVertexOld, listVertexNew, listColor) {
+  let temp = [];
+  listVertexNew.forEach(function (vertex) {
+    for (let i = 0; i < listVertexOld.length; i++) {
+      if (
+        listVertexOld[i][0] == vertex[0] &&
+        listVertexOld[i][1] == vertex[1]
+      ) {
+        temp.push(listColor[i]);
+        break;
+      }
+    }
+  });
+
+  return temp;
+}

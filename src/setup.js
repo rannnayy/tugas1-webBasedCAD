@@ -47,6 +47,8 @@ var rotatedVertex = null;
 var shearedShape = null;
 var shearedVertex = null;
 
+var addedVertexShape = null;
+
 var model = "";
 var positions = [];
 
@@ -58,7 +60,9 @@ const MODES = {
     Dilate: Symbol("Dilate"),
     Rotate: Symbol("Rotate"),
     Selecting: Symbol("Selecting"),
-    Color: Symbol("Color")
+    Color: Symbol("Color"),
+    PolygonAdd:  Symbol("Polygon_add"),
+    PolygonDelete: Symbol("Polygon_del")
 }
 
 var currentMode = MODES.None;

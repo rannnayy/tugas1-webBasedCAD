@@ -291,10 +291,30 @@ class Polygon extends Shape {
     draw() {
         super.drawShape(gl.TRIANGLE_FAN, this.vertices.length);
     }
+        deleteVertex(vertexID){
+        this.vertices.splice(vertexID,1)
+        this.color.splice(vertexID,1)
+    }    
+    addVertex(x,y, r,g,b){
+        super.addVertex(x,y)
+        this.color.push([r,g,b])
+        let newVerticesPosition = ConvexHull(this.vertices)
+        this.color = syncColorVertex(this.vertices, newVerticesPosition, this.color)
+        this.vertices = newVerticesPosition
+    }
     move(x,y){
         let dx = x - this.center[0]
         let dy = y - this.center[1]
         super.move(dx, dy)
         this.center = [x,y]
+    }
+    dilate(x,y){
+        let scale = countDistancePoints(x, y, this.center[0], this.center[1]) / countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.center[0], this.center[1]);
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.vertices[i][0] =
+              this.center[0] + (this.vertices[i][0] - this.center[0]) * scale;
+            this.vertices[i][1] =
+              this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
+        }
     }
 }

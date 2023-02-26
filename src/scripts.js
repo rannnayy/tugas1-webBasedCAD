@@ -105,7 +105,7 @@ function chosenModel(model) {
         document.getElementsByClassName("opt-special-line")[0].style.display = "none";
         document.getElementsByClassName("opt-special-square")[0].style.display = "none";
         document.getElementsByClassName("opt-special-rect")[0].style.display = "none";
-        document.getElementsByClassName("opt-special-polygon")[0].style.display = "none";
+        document.getElementsByClassName("opt-special-polygon")[0].style.display = "block";
     }
 }
 
@@ -533,6 +533,30 @@ canvas.addEventListener("click", (e) => {
 
         document.getElementById("opt-color-bt").style.background = "#00ADB5";
         document.getElementById("opt-color-bt").style.color = "#222831";
+    } else if(currentMode == MODES.PolygonDelete){
+        [updatedShape, _, deletedVertexID, _] = getNearestVertex()
+
+        updatedShape.deleteVertex(deletedVertexID)
+
+        updatedShape = null
+        deletedVertex = null
+        currentMode = MODES.None
+
+        document.getElementById("delete-vertex").style.background = "#00ADB5";
+        document.getElementById("delete-vertex").style.color = "#222831";
+    } else if(currentMode == MODES.PolygonAdd && addedVertexShape == null){
+        [addedVertexShape, _, _,_] = getNearestVertex();
+        
+
+    } else if(currentMode == MODES.PolygonAdd && addedVertexShape != null){
+        getColor()
+        addedVertexShape.addVertex(x, y, redColor, greenColor, blueColor);
+
+        addedVertexShape = null
+        currentMode = MODES.None;
+
+        document.getElementById("add-vertex").style.background = "#00ADB5";
+        document.getElementById("add-vertex").style.color = "#222831";
     }
     redraw();
 });
@@ -654,7 +678,6 @@ document.getElementById("input-rect-width").addEventListener("change", (e) => {
 document.getElementsByClassName("opt-file-load")[0].addEventListener("click", (e) => {
     let file = document.getElementById("loadfile").files[0]
     if(file != undefined){
-        console.log(file);
         let fr = new FileReader();
         fr.readAsText(file);
         fr.onload = function () {
@@ -689,4 +712,18 @@ document.getElementsByClassName("opt-file-save")[0].addEventListener("click", (e
     saveFile.click();
     
     document.body.removeChild(saveFile);
+});
+
+document.getElementById("delete-vertex").addEventListener("click", (e) => {
+    document.getElementById("delete-vertex").style.background = "#222831";
+    document.getElementById("delete-vertex").style.color = "#FFFFFF";
+
+    currentMode = MODES.PolygonDelete
+})
+
+document.getElementById("add-vertex").addEventListener("click", (e) => {
+  document.getElementById("add-vertex").style.background = "#222831";
+  document.getElementById("add-vertex").style.color = "#FFFFFF";
+
+  currentMode = MODES.PolygonAdd;
 });
