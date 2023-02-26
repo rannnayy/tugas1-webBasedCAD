@@ -134,7 +134,7 @@ function chosenTransformation(state) {
         case "Rotate":
             currentMode = MODES.Rotate
             document.getElementById("opt-trans-bt-rotation").style.background = "#222831";
-            document.getElementById("opt-model-bt-polygon").style.color = "#FFFFFF";
+            document.getElementById("opt-model-bt-rotation").style.color = "#FFFFFF";
 
             break;
         case "Shear":
