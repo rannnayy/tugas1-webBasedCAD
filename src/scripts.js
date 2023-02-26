@@ -1,5 +1,7 @@
 // 2. HTML-JS
 
+getColor();
+
 function chosenModel(model) {
     if (model == "line") {
         document.getElementById("opt-model-bt-line").style.background = "#222831";
@@ -271,9 +273,7 @@ canvas.addEventListener("mousemove", (e) => {
     else if (currentMode == MODES.None && currShape == null) {
         getNearestVertex();
         
-        // console.log("nearest point is ", selectedVertex, " with distance ", selectedDistance)
-        let pointPosition = getBoundingCoordinates(selectedVertex[0], selectedVertex[1]);
-        selectedPoint = new Square(pointPosition, [0.0, 0.0, 0.0]);
+        selectedPoint = new Point(selectedVertex);
     }
     else if (currentMode == MODES.Moving) {
         selectedPoint.move(x, y);
@@ -371,8 +371,7 @@ canvas.addEventListener("click", (e) => {
     else if (currentMode == MODES.Translate && grabbedShape == null) {
         getNearestObject();
 
-        let pointPosition = getBoundingCoordinates(grabbedPoint[0], grabbedPoint[1]);
-        selectedPoint = new Square(pointPosition, [0.0, 0.0, 1.0])
+        selectedPoint = new Point(grabbedPoint)
 
         // Move A Shape
         selectedPoint.move(x, y);

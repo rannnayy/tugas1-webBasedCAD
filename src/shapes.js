@@ -45,16 +45,22 @@ class Shape {
 }
 
 class Point extends Shape {
-    constructor(vertices, color) {
-        super("point", vertices, color);
-    }
-    moveVertex(x, y) {
-        this.vertices = [x, y];
-        this.center = this.vertices;
+    constructor(vertices) {
+        let pos = getBoundingCoordinates(vertices[0], vertices[1]);
+        let color = [0.0, 0.0, 0.0];
+        super("point", pos, color);
     }
     draw() {
-        super.drawShape(gl.POINTS, this.vertices.length);
-        this.center = this.vertices;
+        super.drawShape(gl.TRIANGLE_FAN, this.vertices.length);
+        this.center = [(this.vertices[0][0] + this.vertices[2][0]) / 2, (this.vertices[0][1] + this.vertices[2][1]) / 2];
+    }
+    move(x, y) {
+        let center_x = (this.vertices[0][0] + this.vertices[2][0]) / 2;
+        let center_y = (this.vertices[0][1] + this.vertices[2][1]) / 2;
+        let dx = x - center_x;
+        let dy = y - center_y;
+        super.move(dx, dy);
+        this.center = [x, y];
     }
 }
 
