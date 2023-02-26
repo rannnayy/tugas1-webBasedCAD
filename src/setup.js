@@ -201,8 +201,8 @@ function setup() {
         if (xRotate == 1) {
             xRotate == -1
         }
-        xRotate += 0.1
-        redrawRotateAnimation(xRotate,0),
+        xRotate += 0.1;
+        redrawRotateAnimation(xRotate,0);
         window.requestAnimFrame(setup);
     }
     
