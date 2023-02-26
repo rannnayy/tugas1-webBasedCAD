@@ -134,7 +134,7 @@ function chosenTransformation(state) {
         case "Rotate":
             currentMode = MODES.Rotate
             document.getElementById("opt-trans-bt-rotation").style.background = "#222831";
-            document.getElementById("opt-model-bt-rotation").style.color = "#FFFFFF";
+            document.getElementById("opt-trans-bt-rotation").style.color = "#FFFFFF";
 
             break;
         case "Shear":
@@ -261,6 +261,7 @@ canvas.addEventListener("mousemove", (e) => {
                 positions.pop();
             }
             positions.push([x, y]);
+            getColor();
             currShape = new Line(positions, [redColor, greenColor, blueColor]);
             lineShapes.push(currShape);
             document.getElementById("input-line").value = currShape.length();
@@ -273,6 +274,7 @@ canvas.addEventListener("mousemove", (e) => {
                 positions.pop();
             }
             positions = countSquareVertices(positions[0][0], positions[0][1], x, y);
+            getColor();
             currShape = new Square(positions, [redColor, greenColor, blueColor]);
             squareShapes.push(currShape);
             document.getElementById("input-square").value = currShape.length();
@@ -286,6 +288,7 @@ canvas.addEventListener("mousemove", (e) => {
             }
             positions = countRectangleVertices(positions[0][0], positions[0][1], x, y);
             
+            getColor();
             currShape = new Rectangle(positions, [redColor, greenColor, blueColor]);
             rectangleShapes.push(currShape);
             document.getElementById("input-rect-length").value = currShape.length();
