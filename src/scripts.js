@@ -682,24 +682,24 @@ document.getElementsByClassName("opt-file-load")[0].addEventListener("click", (e
         fr.onload = function () {
             let tempShape = fr.result.split("\r\n");
             if (tempShape[0] == "polygon") {
-                polygonShapes.push(
-                new Polygon(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
-                );
+                let dummyShape = new Polygon(JSON.parse(tempShape[1]), [1,0,0])
+                dummyShape.colorAllVertex(JSON.parse(tempShape[2]));
+                polygonShapes.push(dummyShape);
             }
             else if (tempShape[0] == "line") {
-                lineShapes.push(
-                new Line(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
-                );
+                let dummyShape = new Line(JSON.parse(tempShape[1]), [1,0,0])
+                dummyShape.colorAllVertex(JSON.parse(tempShape[2]));
+                lineShapes.push(dummyShape);
             }
             else if (tempShape[0] == "square") {
-                squareShapes.push(
-                new Square(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
-                );
+                let dummyShape = new Square(JSON.parse(tempShape[1]), [1,0,0])
+                dummyShape.colorAllVertex(JSON.parse(tempShape[2]));
+                squareShapes.push(dummyShape);
             }
             else if (tempShape[0] == "rectangle") {
-                squareShapes.push(
-                new Rectangle(JSON.parse(tempShape[1]), JSON.parse(tempShape[2]))
-                );
+                let dummyShape = new Rectangle(JSON.parse(tempShape[1]), [1,0,0])
+                dummyShape.colorAllVertex(JSON.parse(tempShape[2]));
+                rectangleShapes.push(dummyShape);
             }
         };
         redraw();

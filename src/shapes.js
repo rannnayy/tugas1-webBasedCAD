@@ -21,6 +21,11 @@ class Shape {
             this.color[i] = [r, g, b];
         }
     }
+    colorAllVertex(listColor){
+        for (let i = 0; i < this.vertices.length; i++) {
+          this.color[i] = listColor[i];
+        }
+    }
     addVertex(x, y) {
         this.vertices.push([x, y]);
     }
@@ -330,6 +335,9 @@ class Polygon extends Shape {
         deleteVertex(vertexID){
         this.vertices.splice(vertexID,1)
         this.color.splice(vertexID,1)
+    }
+    colorVertex(id, r, g, b) {
+        super.color(id, r, g, b);
     }    
     addVertex(x,y, r,g,b){
         super.addVertex(x,y)
@@ -344,6 +352,9 @@ class Polygon extends Shape {
         super.move(dx, dy)
         this.center = [x,y]
     }
+    length() {
+        return countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.vertices[3][0], this.vertices[3][1]);
+    }
     dilate(x,y){
         let scale = countDistancePoints(x, y, this.center[0], this.center[1]) / countDistancePoints(this.vertices[0][0], this.vertices[0][1], this.center[0], this.center[1]);
         for (let i = 0; i < this.vertices.length; i++) {
@@ -351,6 +362,32 @@ class Polygon extends Shape {
               this.center[0] + (this.vertices[i][0] - this.center[0]) * scale;
             this.vertices[i][1] =
               this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
+        }
+        console.log(this)
+    }
+    rotate(x, y) {
+        for (let i = 0; i < this.vertices.length; i++) {
+            let dX = this.vertices[i][0] - this.center[0];
+            let dY = this.vertices[i][1] - this.center[1]; 
+            let angle;
+            if (x < this.previous_click[0]) {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 + this.previous_click[0]);
+            }
+            else {
+                angle = Math.atan2(dY, dX) + (this.previous_position[0] - x)*2*Math.PI/(1 - this.previous_click[0]);
+            }
+            let radius = Math.sqrt(dX*dX + dY*dY);
+            this.vertices[i][0] = this.center[0] + radius * Math.cos(angle);
+            this.vertices[i][1] = this.center[1] + radius * Math.sin(angle);
+        }
+        this.previous_position=[x,y];
+    }
+    shear(x, y) {
+        let shx = (x - this.center[0]) / (this.length());
+        let shy = (y - this.center[1]) / (this.length());
+        for (let i=0; i<this.vertices.length; i++) {
+            this.vertices[i][0] = this.vertices[i][0] + (this.vertices[i][1] - this.center[1]) * shx;
+            this.vertices[i][1] = this.vertices[i][1] + (this.vertices[i][0] - this.center[0]) * shy;
         }
     }
 }
