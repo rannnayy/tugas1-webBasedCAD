@@ -285,6 +285,12 @@ canvas.addEventListener("mousemove", (e) => {
 
         document.body.style.cursor = "grabbing";
     }
+    else if (currentMode == MODES.Rotate) {
+        selectedPoint.move(x, y);
+        rotatedShape.rotate(x, y);
+
+        document.body.style.cursor = "grabbing";
+    }
     redraw();
 });
 
@@ -402,6 +408,28 @@ canvas.addEventListener("click", (e) => {
         document.body.style.cursor = "default";
         document.getElementById("opt-trans-bt-dilatation").style.background = "#00ADB5";
         document.getElementById("opt-trans-bt-dilatation").style.color = "#222831";
+    }
+    else if (currentMode == MODES.Rotate && rotatedShape == null) {
+        [rotatedShape, rotatedVertex, _, _] = getNearestVertex();
+
+        selectedPoint = new Point(rotatedVertex)
+
+        // Move A Shape
+        selectedPoint.move(x, y);
+        rotatedShape.rotate(x, y);
+        
+        document.body.style.cursor = "grabbing";
+    }
+    else if (currentMode == MODES.Rotate && rotatedShape != null) {
+        selectedPoint.move(x, y);
+        rotatedShape.rotate(x, y);
+        currentMode = MODES.None;
+        rotatedShape = null;
+        rotatedVertex = null;
+        
+        document.body.style.cursor = "default";
+        document.getElementById("opt-trans-bt-rotation").style.background = "#00ADB5";
+        document.getElementById("opt-trans-bt-rotation").style.color = "#222831";
     }
     else if (currentMode == MODES.Color && coloredShape == null) {
         [coloredShape, coloredVertex, coloredVertexID, dist] = getNearestVertex();

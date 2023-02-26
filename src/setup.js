@@ -44,7 +44,9 @@ var coloredPoint = null;
 
 var dilatedShape = null;
 var dilatedVertex = null;
-var dilatedVertexID = null;
+
+var rotatedShape = null;
+var rotatedVertex = null;
 
 var model = "";
 var positions = [];

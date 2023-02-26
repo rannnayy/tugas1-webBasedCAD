@@ -105,6 +105,15 @@ class Line extends Shape {
             this.vertices[i][1] = this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
         }
     }
+    rotate(x, y) {
+        let angle = Math.atan2(y - this.center[1], x - this.center[0]) - Math.atan2(this.vertices[0][1] - this.center[1], this.vertices[0][0] - this.center[0]);
+        
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * Math.cos(angle) - (this.vertices[i][1] - this.center[1]) * Math.sin(angle);
+            this.vertices[i][1] = this.center[1] + (this.vertices[i][0] - this.center[0]) * Math.sin(angle) + (this.vertices[i][1] - this.center[1]) * Math.cos(angle);
+        }
+        // this.vertices[i][0] = this.center[0] + x * Math.cos(angle) - y * Math.sin(angle);
+    }
 }
 
 class Triangle extends Shape {
@@ -176,6 +185,14 @@ class Square extends Shape {
             this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * scale;
             this.vertices[i][1] = this.center[1] + (this.vertices[i][1] - this.center[1]) * scale;
         }
+    }
+    rotate(x, y) {
+        let angle = Math.atan2(y - this.center[1], x - this.center[0]) - Math.atan2(this.vertices[0][1] - this.center[1], this.vertices[0][0] - this.center[0]);
+        for (let i = 0; i < this.vertices.length; i++) {
+            this.vertices[i][0] = this.center[0] + (this.vertices[i][0] - this.center[0]) * Math.cos(angle) - (this.vertices[i][1] - this.center[1]) * Math.sin(angle);
+            this.vertices[i][1] = this.center[1] + (this.vertices[i][0] - this.center[0]) * Math.sin(angle) + (this.vertices[i][1] - this.center[1]) * Math.cos(angle);
+        }
+        // this.vertices[i][0] = this.center[0] + x * Math.cos(angle) - y * Math.sin(angle);
     }
 }
 
